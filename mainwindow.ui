@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>тупое говно тупого говна</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QMdiArea" name="mdiArea">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>910</width>
+      <height>512</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>Файл</string>
+    </property>
+    <addaction name="actionConnect"/>
+    <addaction name="actionDisconnect"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuCalculate">
+    <property name="title">
+     <string>Расчет</string>
+    </property>
+    <addaction name="actionConnect"/>
+    <addaction name="actionParameters"/>
+    <addaction name="actionIntervals"/>
+    <addaction name="actionRefraction"/>
+    <addaction name="separator"/>
+    <addaction name="actionLoadData12"/>
+    <addaction name="actionLoadData3"/>
+    <addaction name="separator"/>
+    <addaction name="actionCalculate12"/>
+    <addaction name="actionCalculate3"/>
+    <addaction name="separator"/>
+    <addaction name="actionPlot"/>
+   </widget>
+   <widget class="QMenu" name="menuPrint">
+    <property name="title">
+     <string>Печать</string>
+    </property>
+    <addaction name="actionCalculationLog"/>
+    <addaction name="separator"/>
+    <addaction name="actionDispersedRays"/>
+    <addaction name="actionNaturalRays"/>
+    <addaction name="actionPolarization"/>
+   </widget>
+   <widget class="QMenu" name="menuTesting">
+    <property name="title">
+     <string>Тестирование</string>
+    </property>
+    <addaction name="actionGradient"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Справка</string>
+    </property>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuCalculate"/>
+   <addaction name="menuPrint"/>
+   <addaction name="menuTesting"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <action name="actionConnect">
+   <property name="text">
+    <string>Подключиться</string>
+   </property>
+  </action>
+  <action name="actionDisconnect">
+   <property name="text">
+    <string>Отключиться</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Выход</string>
+   </property>
+  </action>
+  <action name="actionParameters">
+   <property name="text">
+    <string>Параметры</string>
+   </property>
+  </action>
+  <action name="actionIntervals">
+   <property name="text">
+    <string>Интервалы</string>
+   </property>
+  </action>
+  <action name="actionRefraction">
+   <property name="text">
+    <string>Показатели преломления материалов</string>
+   </property>
+  </action>
+  <action name="actionLoadData12">
+   <property name="text">
+    <string>Загрузить данные (задачи 1, 2)</string>
+   </property>
+  </action>
+  <action name="actionLoadData3">
+   <property name="text">
+    <string>Загрузить данные (задача 3)</string>
+   </property>
+  </action>
+  <action name="actionCalculate12">
+   <property name="text">
+    <string>Выполнить расчет (задачи 1, 2)</string>
+   </property>
+  </action>
+  <action name="actionCalculate3">
+   <property name="text">
+    <string>Выполнить расчет (задача 3)</string>
+   </property>
+  </action>
+  <action name="actionPlot">
+   <property name="text">
+    <string>График</string>
+   </property>
+  </action>
+  <action name="actionCalculationLog">
+   <property name="text">
+    <string>Протокол расчета</string>
+   </property>
+  </action>
+  <action name="actionDispersedRays">
+   <property name="text">
+    <string>Печать расчета рассеянного излучения</string>
+   </property>
+  </action>
+  <action name="actionNaturalRays">
+   <property name="text">
+    <string>Печать расчета естественного излучения</string>
+   </property>
+  </action>
+  <action name="actionPolarization">
+   <property name="text">
+    <string>Печать расчета поляризации</string>
+   </property>
+  </action>
+  <action name="actionGradient">
+   <property name="text">
+    <string>Тест метода градиента</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
