@@ -2,8 +2,9 @@
 #define SPREADSHEET_H
 
 #include <QWidget>
-#include <QtSql>
+#include <QSqlTableModel>
 #include <QTableView>
+#include <QHBoxLayout>
 
 class Spreadsheet : public QWidget
 {
@@ -18,6 +19,7 @@ signals:
 private:
     QSqlTableModel *model;
     QTableView *tableview;
+    QHBoxLayout *layout;
 };
 
 #endif // SPREADSHEET_H
