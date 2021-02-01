@@ -3,6 +3,9 @@
 
 #include <QToolButton>
 #include <QTableWidget>
+#include <QLabel>
+#include <QImage>
+#include <QProcess>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -16,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->actionLoadData12, &QAction::triggered, this, &MainWindow::loadTable);
     connect(ui->actionParameters, &QAction::triggered, this, &MainWindow::createParameterTable);
+    connect(ui->actionPlot, &QAction::triggered, this, &MainWindow::loadPlot);
+    connect(ui->actionCalculate12, &QAction::triggered, this, &MainWindow::runPython);
 }
 
 MainWindow::~MainWindow()
@@ -35,13 +40,14 @@ void MainWindow::setupToolbar()
 
     QToolButton *button_calc = new QToolButton();
     button_calc->setPopupMode(QToolButton::MenuButtonPopup);
-    button_load->addAction(ui->actionCalculate12);
+    button_calc->addAction(ui->actionCalculate12);
     button_calc->addAction(ui->actionCalculate3);
     button_calc->setText("Calculate");
     ui->toolBar->addWidget(button_calc);
 
     QToolButton *button_plot = new QToolButton();
     button_plot->setText("Plot");
+    button_plot->setDefaultAction(ui->actionPlot);
     ui->toolBar->addWidget(button_plot);
 
     QToolButton *button_print = new QToolButton();
@@ -97,4 +103,28 @@ void MainWindow::createParameterTable()
 
     ui->mdiArea->addSubWindow(w);
     w->show();
+}
+
+void MainWindow::loadPlot()
+{
+    QWidget *w = new QWidget();
+    QHBoxLayout *l = new QHBoxLayout();
+    w->setLayout(l);
+
+    QImage img = QImage("C:\\Users\\User\\Documents\\Code\\Cpp\\TestPyEmbed\\ebosh.jpg");
+    QLabel *lbl = new QLabel();
+    lbl->setPixmap(QPixmap::fromImage(img.scaled(600, 400, Qt::KeepAspectRatio)));
+
+    w->layout()->addWidget(lbl);
+    ui->mdiArea->addSubWindow(w);
+    w->show();
+}
+
+void MainWindow::runPython()
+{
+    QProcess pyproc;
+    QStringList args;
+    args << "C:\\Users\\User\\Documents\\Code\\sketch\\sample_plots.py";
+    QString prog = "C:\\Users\\User\\Documents\\Code\\sketch\\Scripts\\python.exe";
+    pyproc.startDetached(prog, args);
 }

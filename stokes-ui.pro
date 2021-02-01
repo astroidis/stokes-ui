@@ -27,6 +27,7 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-DISTFILES +=
+DISTFILES += \
+    test.py
 
 LIBS += -L"C:\Program Files\PostgreSQL\13\bin" -llibpq
