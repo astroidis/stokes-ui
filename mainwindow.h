@@ -26,5 +26,6 @@ private:
 
 private slots:
     void loadTable();
+    void createParameterTable();
 };
 #endif // MAINWINDOW_H

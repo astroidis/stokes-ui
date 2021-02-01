@@ -18,11 +18,6 @@ void Spreadsheet::displayTable(const char *name)
     tableview->setModel(model);
     tableview->resizeColumnsToContents();
     tableview->resizeRowsToContents();
-//    tableview->setSizeAdjustPolicy(QTableView::AdjustToContents);
-//    tableview->horizontalHeader()->setStretchLastSection(true);
-//    tableview->verticalHeader()->setStretchLastSection(true);
-    tableview->setMinimumHeight(400);
-    tableview->setMinimumWidth(400);
 
     this->layout->addWidget(tableview);
 }
