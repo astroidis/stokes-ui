@@ -48,6 +48,7 @@
       <string>Эээээксперименты</string>
      </property>
      <addaction name="actionNewExperiment"/>
+     <addaction name="actionOpenExperiment"/>
     </widget>
     <addaction name="menuExperiments"/>
     <addaction name="separator"/>
@@ -194,6 +195,11 @@
   <action name="actionNewExperiment">
    <property name="text">
     <string>Новые эээээксперименты</string>
+   </property>
+  </action>
+  <action name="actionOpenExperiment">
+   <property name="text">
+    <string>Открыть</string>
    </property>
   </action>
  </widget>

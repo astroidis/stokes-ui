@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionPlot, &QAction::triggered, this, &MainWindow::loadPlot);
     connect(ui->actionCalculate12, &QAction::triggered, this, &MainWindow::runPython);
     connect(ui->actionNewExperiment, &QAction::triggered, this, &MainWindow::addNewExperiment);
+    connect(ui->actionOpenExperiment, &QAction::triggered, this, &MainWindow::openAllExperiments);
 }
 
 MainWindow::~MainWindow()
@@ -136,4 +137,12 @@ void MainWindow::addNewExperiment()
 {
     NewExperimentDialog dialog(this);
     dialog.exec();
+}
+
+void MainWindow::openAllExperiments()
+{
+    experiments = new Spreadsheet();
+    experiments->displayTable("experiments");
+    ui->mdiArea->addSubWindow(experiments);
+    experiments->show();
 }

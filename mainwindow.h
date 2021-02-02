@@ -21,6 +21,7 @@ private:
     Ui::MainWindow *ui;
     Database *db;
     Spreadsheet *table;
+    Spreadsheet *experiments;
 
     void setupToolbar();
 
@@ -30,5 +31,7 @@ private slots:
     void loadPlot();
     void runPython();
     void addNewExperiment();
+    void openAllExperiments();
 };
+
 #endif // MAINWINDOW_H
