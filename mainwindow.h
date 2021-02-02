@@ -29,5 +29,6 @@ private slots:
     void createParameterTable();
     void loadPlot();
     void runPython();
+    void addNewExperiment();
 };
 #endif // MAINWINDOW_H

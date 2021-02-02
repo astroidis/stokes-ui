@@ -5,7 +5,7 @@ Database::Database(QObject *parent) : QObject(parent)
 {
 }
 
-bool Database::makeConnection()
+void Database::makeConnection()
 {
     conn = QSqlDatabase::addDatabase("QPSQL", "stokes_db");
     conn.setDatabaseName("stokes_db");
@@ -22,8 +22,8 @@ bool Database::openDB()
             qDebug() << conn.lastError();
             return false;
         }
-        return true;
     }
+    return true;
 }
 
 void Database::closeDB()
@@ -32,3 +32,22 @@ void Database::closeDB()
         conn.close();
     }
 }
+
+Database * Database::instance()
+{
+    if (!pdb){
+        pdb = new Database();
+    }
+    return pdb;
+}
+
+bool Database::addNewExperiment(QString name, QString comment)
+{
+    QSqlQuery query = QSqlQuery(conn);
+    query.prepare("insert into experiments (obj_name, obj_comment) values (:name, :comment)");
+    query.bindValue(":name", name);;
+    query.bindValue(":comment", comment);
+    return query.exec();
+}
+
+Database* Database::pdb = nullptr;

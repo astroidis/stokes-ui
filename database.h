@@ -7,18 +7,20 @@
 class Database : public QObject
 {
     Q_OBJECT
-public:
-    QSqlDatabase conn;
 
 public:
-    explicit Database(QObject *parent = nullptr);
+    static Database * instance();
 
-    bool makeConnection();
+    void makeConnection();
     bool openDB();
     void closeDB();
-    bool execute(const char *query);
+    bool addNewExperiment(QString name, QString comment);
 
 private:
+    static Database *pdb;
+    QSqlDatabase conn;
+
+    explicit Database(QObject *parent = nullptr);
 };
 
 #endif // DATABASE_H

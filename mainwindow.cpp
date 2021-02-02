@@ -7,12 +7,14 @@
 #include <QImage>
 #include <QProcess>
 
+#include "newexperimentdialog.h"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , db(new Database())
 {
     ui->setupUi(this);
+    db = Database::instance();
     db->makeConnection();
     db->openDB();
     setupToolbar();
@@ -21,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionParameters, &QAction::triggered, this, &MainWindow::createParameterTable);
     connect(ui->actionPlot, &QAction::triggered, this, &MainWindow::loadPlot);
     connect(ui->actionCalculate12, &QAction::triggered, this, &MainWindow::runPython);
+    connect(ui->actionNewExperiment, &QAction::triggered, this, &MainWindow::addNewExperiment);
 }
 
 MainWindow::~MainWindow()
@@ -127,4 +130,10 @@ void MainWindow::runPython()
     args << "C:\\Users\\User\\Documents\\Code\\sketch\\sample_plots.py";
     QString prog = "C:\\Users\\User\\Documents\\Code\\sketch\\Scripts\\python.exe";
     pyproc.startDetached(prog, args);
+}
+
+void MainWindow::addNewExperiment()
+{
+    NewExperimentDialog dialog(this);
+    dialog.exec();
 }

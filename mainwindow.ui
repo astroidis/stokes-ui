@@ -43,6 +43,14 @@
     <property name="title">
      <string>Файл</string>
     </property>
+    <widget class="QMenu" name="menuExperiments">
+     <property name="title">
+      <string>Эээээксперименты</string>
+     </property>
+     <addaction name="actionNewExperiment"/>
+    </widget>
+    <addaction name="menuExperiments"/>
+    <addaction name="separator"/>
     <addaction name="actionConnect"/>
     <addaction name="actionDisconnect"/>
     <addaction name="separator"/>
@@ -181,6 +189,11 @@
   <action name="actionGradient">
    <property name="text">
     <string>Тест метода градиента</string>
+   </property>
+  </action>
+  <action name="actionNewExperiment">
+   <property name="text">
+    <string>Новые эээээксперименты</string>
    </property>
   </action>
  </widget>

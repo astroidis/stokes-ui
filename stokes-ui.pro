@@ -12,15 +12,18 @@ SOURCES += \
     database.cpp \
     main.cpp \
     mainwindow.cpp \
+    newexperimentdialog.cpp \
     spreadsheet.cpp
 
 HEADERS += \
     database.h \
     mainwindow.h \
+    newexperimentdialog.h \
     spreadsheet.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    newexperimentdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
