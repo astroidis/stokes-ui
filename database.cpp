@@ -45,8 +45,20 @@ bool Database::addNewExperiment(QString name, QString comment)
 {
     QSqlQuery query = QSqlQuery(conn);
     query.prepare("insert into experiments (obj_name, obj_comment) values (:name, :comment)");
-    query.bindValue(":name", name);;
+    qDebug() << query.lastQuery();
+    query.bindValue(":name", name);
     query.bindValue(":comment", comment);
+    return query.exec();
+}
+
+bool Database::updateExperiment(QString id, QString name, QString comment)
+{
+    QSqlQuery query = QSqlQuery(conn);
+    query.prepare("update experiments set obj_name = :name, obj_comment = :comment"
+                  " where obj_id = :id");
+    query.bindValue(":name", name);
+    query.bindValue(":comment", comment);
+    query.bindValue(":id", id.toInt());
     return query.exec();
 }
 

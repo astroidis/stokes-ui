@@ -15,6 +15,7 @@ public:
     bool openDB();
     void closeDB();
     bool addNewExperiment(QString name, QString comment);
+    bool updateExperiment(QString id, QString name, QString comment);
 
 private:
     static Database *pdb;

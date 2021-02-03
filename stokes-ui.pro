@@ -10,18 +10,23 @@ CONFIG += c++17
 
 SOURCES += \
     database.cpp \
+    editexperimentdialog.cpp \
     main.cpp \
     mainwindow.cpp \
     newexperimentdialog.cpp \
+    roweditingdelegate.cpp \
     spreadsheet.cpp
 
 HEADERS += \
     database.h \
+    editexperimentdialog.h \
     mainwindow.h \
     newexperimentdialog.h \
+    roweditingdelegate.h \
     spreadsheet.h
 
 FORMS += \
+    editexperimentdialog.ui \
     mainwindow.ui \
     newexperimentdialog.ui
 
