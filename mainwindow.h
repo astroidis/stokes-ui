@@ -22,6 +22,7 @@ private:
     Database *db;
     Spreadsheet *table;
     Spreadsheet *experiments;
+    QString selectedExperiment;
 
     void setupToolbar();
 
@@ -32,6 +33,8 @@ private slots:
     void runPython();
     void addNewExperiment();
     void openAllExperiments();
+    void openExperimentSelector();
+    void currentExperiment(QString uuid, QString name);
 };
 
 #endif // MAINWINDOW_H

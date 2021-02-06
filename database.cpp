@@ -62,4 +62,11 @@ bool Database::updateExperiment(QString id, QString name, QString comment)
     return query.exec();
 }
 
+QSqlQuery Database::getAllExperiments()
+{
+    QSqlQuery query = QSqlQuery(conn);
+    query.prepare("select obj_uuid, obj_name, obj_comment from experiments");
+    return query;
+}
+
 Database* Database::pdb = nullptr;

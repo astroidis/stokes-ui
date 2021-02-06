@@ -8,6 +8,7 @@
 #include <QProcess>
 
 #include "newexperimentdialog.h"
+#include "experimentselectordialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -25,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionCalculate12, &QAction::triggered, this, &MainWindow::runPython);
     connect(ui->actionNewExperiment, &QAction::triggered, this, &MainWindow::addNewExperiment);
     connect(ui->actionOpenExperiment, &QAction::triggered, this, &MainWindow::openAllExperiments);
+    connect(ui->actionSelect, &QAction::triggered, this, &MainWindow::openExperimentSelector);
 }
 
 MainWindow::~MainWindow()
@@ -145,4 +147,17 @@ void MainWindow::openAllExperiments()
     experiments->displayTable("experiments");
     ui->mdiArea->addSubWindow(experiments);
     experiments->show();
+}
+
+void MainWindow::openExperimentSelector()
+{
+    ExperimentSelectorDialog *dialog = new ExperimentSelectorDialog();
+    connect(dialog, &ExperimentSelectorDialog::experimentSelected, this, &MainWindow::currentExperiment);
+    dialog->exec();
+}
+
+void MainWindow::currentExperiment(QString uuid, QString name)
+{
+    this->setWindowTitle(this->windowTitle() + " - " + name);
+    this->selectedExperiment = uuid;
 }
