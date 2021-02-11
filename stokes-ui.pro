@@ -14,6 +14,7 @@ SOURCES += \
     experimentselectordialog.cpp \
     main.cpp \
     mainwindow.cpp \
+    materialrefractiontable.cpp \
     newexperimentdialog.cpp \
     roweditingdelegate.cpp \
     spreadsheet.cpp
@@ -23,6 +24,7 @@ HEADERS += \
     editexperimentdialog.h \
     experimentselectordialog.h \
     mainwindow.h \
+    materialrefractiontable.h \
     newexperimentdialog.h \
     roweditingdelegate.h \
     spreadsheet.h
@@ -31,6 +33,7 @@ FORMS += \
     editexperimentdialog.ui \
     experimentselectordialog.ui \
     mainwindow.ui \
+    materialrefractiontable.ui \
     newexperimentdialog.ui
 
 # Default rules for deployment.

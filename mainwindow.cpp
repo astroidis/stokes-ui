@@ -6,9 +6,11 @@
 #include <QLabel>
 #include <QImage>
 #include <QProcess>
+#include <QFileDialog>
 
 #include "newexperimentdialog.h"
 #include "experimentselectordialog.h"
+#include "materialrefractiontable.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -27,6 +29,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionNewExperiment, &QAction::triggered, this, &MainWindow::addNewExperiment);
     connect(ui->actionOpenExperiment, &QAction::triggered, this, &MainWindow::openAllExperiments);
     connect(ui->actionSelect, &QAction::triggered, this, &MainWindow::openExperimentSelector);
+    connect(ui->actionOpenRefraction_2, &QAction::triggered, this, &MainWindow::openRefraction);
+    connect(ui->actionExportRefraction_2, &QAction::triggered, this, &MainWindow::exportRefraction);
+    connect(ui->actionImportRefraction_2, &QAction::triggered, this, &MainWindow::importRefraction);
 }
 
 MainWindow::~MainWindow()
@@ -160,4 +165,28 @@ void MainWindow::currentExperiment(QString uuid, QString name)
 {
     this->setWindowTitle(this->windowTitle() + " - " + name);
     this->selectedExperiment = uuid;
+}
+
+void MainWindow::openRefraction()
+{
+    MaterialRefractionTable *table = new MaterialRefractionTable();
+    ui->mdiArea->addSubWindow(table);
+    table->show();
+    table->displayTable();
+    connect(this, &MainWindow::refractionExportFile, table, &MaterialRefractionTable::exportTable);
+    connect(this, &MainWindow::refractionImportFile, table, &MaterialRefractionTable::importTable);
+}
+
+void MainWindow::exportRefraction()
+{
+    QString filename = QFileDialog::getSaveFileName(this, "Open", "C:\\Users\\User\\Documents\\",
+                                                    "CSV (*.csv) ;; Text (*.txt) ;; All files (*.*)");
+    emit refractionExportFile(filename);
+}
+
+void MainWindow::importRefraction()
+{
+    QString filename = QFileDialog::getOpenFileName(this, "Open", "C:\\Users\\User\\Documents\\",
+                                                    "CSV (*.csv) ;; Text (*.txt) ;; All files (*.*)");
+    emit refractionImportFile(filename);
 }

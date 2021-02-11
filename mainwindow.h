@@ -17,6 +17,10 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+signals:
+    void refractionExportFile(QString filename);
+    void refractionImportFile(QString filename);
+
 private:
     Ui::MainWindow *ui;
     Database *db;
@@ -35,6 +39,9 @@ private slots:
     void openAllExperiments();
     void openExperimentSelector();
     void currentExperiment(QString uuid, QString name);
+    void openRefraction();
+    void exportRefraction();
+    void importRefraction();
 };
 
 #endif // MAINWINDOW_H

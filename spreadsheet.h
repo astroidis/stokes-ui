@@ -18,9 +18,6 @@ private:
     QSqlTableModel *model;
     QTableView *tableview;
     QHBoxLayout *layout;
-
-private slots:
-    void openEditor(int row);
 };
 
 #endif // SPREADSHEET_H

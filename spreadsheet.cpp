@@ -6,8 +6,6 @@ Spreadsheet::Spreadsheet(QWidget *parent) : QWidget(parent)
   , layout (new QHBoxLayout)
 {
     this->setLayout(layout);
-//    connect(tableview, &QTableView::doubleClicked,
-//            this, &Spreadsheet::openEditor);
 }
 
 void Spreadsheet::displayTable(const char *name)
@@ -25,11 +23,4 @@ void Spreadsheet::displayTable(const char *name)
     tableview->setItemDelegate(new RowEditingDelegate);
 
     this->layout->addWidget(tableview);
-}
-
-void Spreadsheet::openEditor(int row)
-{
-//    QSqlRecord rec = model->record(row);
-//    EditExperimentDialog dlg(rec, this);
-//    dlg.exec();
 }

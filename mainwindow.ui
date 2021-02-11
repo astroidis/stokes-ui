@@ -53,18 +53,25 @@
     </widget>
     <addaction name="menuExperiments"/>
     <addaction name="separator"/>
+    <addaction name="actionExit"/>
     <addaction name="actionConnect"/>
     <addaction name="actionDisconnect"/>
-    <addaction name="separator"/>
-    <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuCalculate">
     <property name="title">
      <string>Расчет</string>
     </property>
+    <widget class="QMenu" name="menuRefraction">
+     <property name="title">
+      <string>Показатели преломления материалов</string>
+     </property>
+     <addaction name="actionOpenRefraction_2"/>
+     <addaction name="actionExportRefraction_2"/>
+     <addaction name="actionImportRefraction_2"/>
+    </widget>
     <addaction name="actionParameters"/>
     <addaction name="actionIntervals"/>
-    <addaction name="actionRefraction"/>
+    <addaction name="menuRefraction"/>
     <addaction name="separator"/>
     <addaction name="actionLoadData12"/>
     <addaction name="actionLoadData3"/>
@@ -138,11 +145,6 @@
     <string>Интервалы</string>
    </property>
   </action>
-  <action name="actionRefraction">
-   <property name="text">
-    <string>Показатели преломления материалов</string>
-   </property>
-  </action>
   <action name="actionLoadData12">
    <property name="text">
     <string>Загрузить данные (задачи 1, 2)</string>
@@ -206,6 +208,36 @@
   <action name="actionSelect">
    <property name="text">
     <string>Select</string>
+   </property>
+  </action>
+  <action name="actionOpenRefraction">
+   <property name="text">
+    <string>Open</string>
+   </property>
+  </action>
+  <action name="actionImportRefraction">
+   <property name="text">
+    <string>Import</string>
+   </property>
+  </action>
+  <action name="actionExportRefraction">
+   <property name="text">
+    <string>Export</string>
+   </property>
+  </action>
+  <action name="actionOpenRefraction_2">
+   <property name="text">
+    <string>Open</string>
+   </property>
+  </action>
+  <action name="actionExportRefraction_2">
+   <property name="text">
+    <string>Export</string>
+   </property>
+  </action>
+  <action name="actionImportRefraction_2">
+   <property name="text">
+    <string>Import</string>
    </property>
   </action>
  </widget>
