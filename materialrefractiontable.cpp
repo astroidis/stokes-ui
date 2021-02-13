@@ -65,13 +65,21 @@ void MaterialRefractionTable::exportTable(QString filename)
     QFile file(filename);
     if (file.open(QFile::WriteOnly | QFile::Truncate)){
         QTextStream out(&file);
+        QStringList list;
         int rows = model->rowCount();
         int cols = model->columnCount();
+        for (int i = 0; i < cols; i++){
+            list << model->headerData(i, Qt::Horizontal).toString();
+        }
+        out << list.join(";") << '\n';
+        list.clear();
+
         for (int i = 0; i < rows; i++){
             for (int j = 0; j < cols; j++){
-                out << model->data(model->index(i, j)).toString() << ";";
+                list << model->data(model->index(i, j)).toString();
             }
-            out << '\n';
+            out << list.join(";") << '\n';
+            list.clear();
         }
     }
     file.close();
