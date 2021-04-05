@@ -11,6 +11,7 @@
 #include "newexperimentdialog.h"
 #include "experimentselectordialog.h"
 #include "materialrefractiontable.h"
+#include "calc12window.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -32,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionOpenRefraction_2, &QAction::triggered, this, &MainWindow::openRefraction);
     connect(ui->actionExportRefraction_2, &QAction::triggered, this, &MainWindow::exportRefraction);
     connect(ui->actionImportRefraction_2, &QAction::triggered, this, &MainWindow::importRefraction);
+    connect(ui->actionCalculate12, &QAction::triggered, this, &MainWindow::makeCalc12);
 }
 
 MainWindow::~MainWindow()
@@ -189,4 +191,11 @@ void MainWindow::importRefraction()
     QString filename = QFileDialog::getOpenFileName(this, "Open", "C:\\Users\\User\\Documents\\",
                                                     "CSV (*.csv) ;; Text (*.txt) ;; All files (*.*)");
     emit refractionImportFile(filename);
+}
+
+void MainWindow::makeCalc12()
+{
+    Calc12Window *calc = new Calc12Window();
+    ui->mdiArea->addSubWindow(calc);
+    calc->show();
 }

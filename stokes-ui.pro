@@ -9,6 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    calc12window.cpp \
     database.cpp \
     editexperimentdialog.cpp \
     experimentselectordialog.cpp \
@@ -20,6 +21,7 @@ SOURCES += \
     spreadsheet.cpp
 
 HEADERS += \
+    calc12window.h \
     database.h \
     editexperimentdialog.h \
     experimentselectordialog.h \
@@ -30,6 +32,7 @@ HEADERS += \
     spreadsheet.h
 
 FORMS += \
+    calc12window.ui \
     editexperimentdialog.ui \
     experimentselectordialog.ui \
     mainwindow.ui \
