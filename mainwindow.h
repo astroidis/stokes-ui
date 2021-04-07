@@ -43,6 +43,7 @@ private slots:
     void exportRefraction();
     void importRefraction();
     void makeCalc12();
+    void makeCalc3();
 };
 
 #endif // MAINWINDOW_H

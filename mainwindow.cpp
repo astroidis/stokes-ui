@@ -12,6 +12,7 @@
 #include "experimentselectordialog.h"
 #include "materialrefractiontable.h"
 #include "calc12window.h"
+#include "calc3window.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -34,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionExportRefraction_2, &QAction::triggered, this, &MainWindow::exportRefraction);
     connect(ui->actionImportRefraction_2, &QAction::triggered, this, &MainWindow::importRefraction);
     connect(ui->actionCalculate12, &QAction::triggered, this, &MainWindow::makeCalc12);
+    connect(ui->actionCalculate3, &QAction::triggered, this, &MainWindow::makeCalc3);
 }
 
 MainWindow::~MainWindow()
@@ -196,6 +198,13 @@ void MainWindow::importRefraction()
 void MainWindow::makeCalc12()
 {
     Calc12Window *calc = new Calc12Window();
+    ui->mdiArea->addSubWindow(calc);
+    calc->show();
+}
+
+void MainWindow::makeCalc3()
+{
+    Calc3Window *calc = new Calc3Window();
     ui->mdiArea->addSubWindow(calc);
     calc->show();
 }

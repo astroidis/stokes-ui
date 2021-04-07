@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     calc12window.cpp \
+    calc3window.cpp \
     database.cpp \
     editexperimentdialog.cpp \
     experimentselectordialog.cpp \
@@ -22,6 +23,7 @@ SOURCES += \
 
 HEADERS += \
     calc12window.h \
+    calc3window.h \
     database.h \
     editexperimentdialog.h \
     experimentselectordialog.h \
@@ -33,6 +35,7 @@ HEADERS += \
 
 FORMS += \
     calc12window.ui \
+    calc3window.ui \
     editexperimentdialog.ui \
     experimentselectordialog.ui \
     mainwindow.ui \
