@@ -1,6 +1,5 @@
 #include "spreadsheet.h"
 #include "roweditingdelegate.h"
-#include <QScrollBar>
 
 Spreadsheet::Spreadsheet(QWidget *parent) : QWidget(parent)
   , layout (new QHBoxLayout)
