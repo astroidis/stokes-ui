@@ -11,6 +11,10 @@ CONFIG += c++17
 SOURCES += \
     calc12window.cpp \
     calc3window.cpp \
+    calculations/gradient.cpp \
+    calculations/laplace.cpp \
+    calculations/stokesvector.cpp \
+    calculations/task12.cpp \
     database.cpp \
     editexperimentdialog.cpp \
     experimentselectordialog.cpp \
@@ -24,6 +28,9 @@ SOURCES += \
 HEADERS += \
     calc12window.h \
     calc3window.h \
+    calculation.h \
+    calculations/calculation.h \
+    calculations/task12.h \
     database.h \
     editexperimentdialog.h \
     experimentselectordialog.h \
