@@ -2,6 +2,11 @@
 
 #include <array>
 
+using std::cos;
+using std::sin;
+using std::sqrt;
+using std::abs;
+
 Calculation::StokesVector::StokesVector(double j, double q, double u, double v)
 {
     J = j;
@@ -12,11 +17,11 @@ Calculation::StokesVector::StokesVector(double j, double q, double u, double v)
 
 double Calculation::StokesVector::p()
 {
-    if (std::abs(J) < 1e-8){
+    if (abs(J) < 1e-8){
         return 0.0;
     }
     else {
-        double result = std::sqrt(Q*Q + U*U + V*V) / J;
+        double result = sqrt(Q*Q + U*U + V*V) / J;
         if (result > 1){
             result = 1;
         }
@@ -30,7 +35,7 @@ void Calculation::StokesVector::swap(int k, int n, std::array<std::array<double,
     int i = k;
 
     for (int j = k+1; j < n; j++){
-        if (std::abs(A[j][k]) > z){
+        if (abs(A[j][k]) > z){
             z = A[j][k];
             i = j;
         }
@@ -60,20 +65,20 @@ void Calculation::StokesVector::calculate(Intensity I1, Intensity I2, Intensity 
     A[2][0] = 1;
     A[3][0] = 1;
 
-    A[0][1] = std::cos(2 * I1.phi);
-    A[1][1] = std::cos(2 * I2.phi);
-    A[2][1] = std::cos(2 * I3.phi);
-    A[3][1] = std::cos(2 * I4.phi);
+    A[0][1] = cos(2 * I1.phi);
+    A[1][1] = cos(2 * I2.phi);
+    A[2][1] = cos(2 * I3.phi);
+    A[3][1] = cos(2 * I4.phi);
 
-    A[0][2] = std::sin(2 * I1.phi) * std::cos(I1.tau);
-    A[1][2] = std::sin(2 * I1.phi) * std::cos(I1.tau);
-    A[2][2] = std::sin(2 * I2.phi) * std::cos(I1.tau);
-    A[3][2] = std::sin(2 * I3.phi) * std::cos(I1.tau);
+    A[0][2] = sin(2 * I1.phi) * cos(I1.tau);
+    A[1][2] = sin(2 * I1.phi) * cos(I1.tau);
+    A[2][2] = sin(2 * I2.phi) * cos(I1.tau);
+    A[3][2] = sin(2 * I3.phi) * cos(I1.tau);
 
-    A[0][3] = std::sin(2 * I1.phi) * std::sin(I1.tau);
-    A[1][3] = std::sin(2 * I2.phi) * std::sin(I2.tau);
-    A[2][3] = std::sin(2 * I3.phi) * std::sin(I3.tau);
-    A[3][3] = std::sin(2 * I4.phi) * std::sin(I4.tau);
+    A[0][3] = sin(2 * I1.phi) * sin(I1.tau);
+    A[1][3] = sin(2 * I2.phi) * sin(I2.tau);
+    A[2][3] = sin(2 * I3.phi) * sin(I3.tau);
+    A[3][3] = sin(2 * I4.phi) * sin(I4.tau);
 
     A[0][4] = 2 * I1.i;
     A[1][4] = 2 * I2.i;
@@ -81,12 +86,12 @@ void Calculation::StokesVector::calculate(Intensity I1, Intensity I2, Intensity 
     A[3][4] = 2 * I4.i;
 
     for (int k = 0; k < 4; k++){
-        if (std::abs(A[k][k]) < 1e-10){
-            double max = std::abs(A[k][k]);
+        if (abs(A[k][k]) < 1e-10){
+            double max = abs(A[k][k]);
             int idx = k;
 
             for (int z = k+1; z < 5; z++){
-                double c = std::abs(A[k][z]);
+                double c = abs(A[k][z]);
                 if (c > max){
                     idx = z;
                     max = c;
@@ -133,7 +138,7 @@ void Calculation::StokesVector::calculate(Intensity I1, Intensity I2, Intensity 
 
 std::complex<double> Calculation::squareRoot(std::complex<double> v, int index)
 {
-    double a = std::sqrt(std::sqrt(v.real()*v.real() + v.imag()*v.imag()));
+    double a = sqrt(sqrt(v.real()*v.real() + v.imag()*v.imag()));
     double phi = std::atan(v.imag() / v.real());
 
     if (v.real() < 0){
@@ -161,8 +166,8 @@ void Calculation::NaturalStokesVector::calculateNatural(Calculation::StokesVecto
                                                         std::complex<double> nju, double phi)
 {
     std::complex<double> nju2 = nju * nju,
-                         cphi = std::cos(phi / 180.0),
-                         sphi = std::sin(phi / 180.0),
+                         cphi = cos(phi / 180.0),
+                         sphi = sin(phi / 180.0),
                          cosphi(cphi, 0.0),
                          sinphi(sphi, 0.0),
                          sinphi2 = sinphi * sinphi,
@@ -182,9 +187,9 @@ void Calculation::NaturalStokesVector::calculateNatural(Calculation::StokesVecto
                          r2 = ch2 / zn2,
                          r1r2_ = r1 * std::conj(r2);
 
-    double r1_2 = std::abs(r1) * std::abs(r1),
-           r2_2 = std::abs(r2) * std::abs(r2),
-           r1r2_2 = std::abs(r1r2_) * std::abs(r1r2_);
+    double r1_2 = abs(r1) * abs(r1),
+           r2_2 = abs(r2) * abs(r2),
+           r1r2_2 = abs(r1r2_) * abs(r1r2_);
 
     J = (vector.J * (r1_2 + r2_2) - vector.Q * (r1_2 - r2_2)) / (2 * r1_2 * r2_2);
     Q = (vector.Q * (r1_2 + r2_2) - vector.J * (r1_2 - r2_2)) / (2 * r1_2 * r2_2);

@@ -12,7 +12,7 @@ typedef struct
            beta,
            beta1,
            re_hi,
-           im_hi
+           im_hi;
 } Reflection;
 
 class Task12

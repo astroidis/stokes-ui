@@ -15,6 +15,7 @@ SOURCES += \
     calculations/laplace.cpp \
     calculations/stokesvector.cpp \
     calculations/task12.cpp \
+    calculations/task3.cpp \
     database.cpp \
     editexperimentdialog.cpp \
     experimentselectordialog.cpp \
@@ -31,6 +32,7 @@ HEADERS += \
     calculation.h \
     calculations/calculation.h \
     calculations/task12.h \
+    calculations/task3.h \
     database.h \
     editexperimentdialog.h \
     experimentselectordialog.h \
