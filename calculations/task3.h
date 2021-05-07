@@ -15,42 +15,45 @@ namespace Task3
         IS_METAL
     };
 
-    struct ItemC
+    class ItemC
     {
+    public:
         bool iscalc;
         double value;
         double value_norm;
+
+        ItemC() = default;
+        virtual double calc() {return value;}
     };
 
 
-    class ItemC1
+    class ItemC1 : public ItemC
     {
     public:
         double dTetta, Q, U, V;
 
         ItemC1(double dtetta, double q, double u, double v);
-        double calc();
+        double calc() override;
     };
 
 
-    class ItemC2
+    class ItemC2 : public ItemC
     {
     public:
         double dGamma, Q, U, V;
 
         ItemC2(double dgamma, double q, double u, double v);
-        double calc();
+        double calc() override;
     };
 
 
-    class ItemC3
+    class ItemC3 : public ItemC
     {
     public:
         double dGamma, Afla, Beta;
-        bool iscalc;
 
         ItemC3(double dgamma, double alfa, double beta);
-        double calc();
+        double calc() override;
     };
 
 
@@ -89,10 +92,11 @@ namespace Task3
     }
 
     double len2rect(double re, double im, double re1, double re2, double im1, double im2);
-    double chi2P(double chi, double df);
+    double chi2P(double chi, int df);
     std::vector<Interval> getIntervals(int count, double min, double max);
-    void calcStat(void_t data, std::map<std::string, double> &stat);
-    std::pair<int, Material> calcPlaneMaterial(void_t data, std::vector<Material> materials, PlaneTypes type);
+    std::map<std::string, double> calcStat(std::vector<ItemC> data);
+    std::pair<int, Material>
+        calcPlaneMaterial(std::vector<Sample> data, std::vector<Material> materials, PlaneTypes type);
 }
 
 #endif // TASK3_H
