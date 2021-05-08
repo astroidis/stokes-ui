@@ -58,7 +58,7 @@ void Calc3Window::c3rbtnClicked()
     modelC3->setTable("c3_parameter");
     modelC3->select();
 
-    ui->C3table->setModel(&modelC3);
+    ui->C3table->setModel(modelC3);
     ui->C3table->resizeColumnsToContents();
     ui->C3table->resizeRowsToContents();
 

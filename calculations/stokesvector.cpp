@@ -153,7 +153,7 @@ std::complex<double> Calculation::squareRoot(std::complex<double> v, int index)
         phi += PI;
     }
 
-    return std::complex<double> {a * std::cos(phi), a * std::sin(phi)};
+    return std::complex<double> {a * cos(phi), a * sin(phi)};
 }
 
 
@@ -165,17 +165,16 @@ Calculation::NaturalStokesVector::NaturalStokesVector(double j, double q, double
 void Calculation::NaturalStokesVector::calculateNatural(Calculation::StokesVector &vector,
                                                         std::complex<double> nju, double phi)
 {
+    double cphi = cos(phi / 180.0), sphi = sin(phi / 180.0);
     std::complex<double> nju2 = nju * nju,
-                         cphi = cos(phi / 180.0),
-                         sphi = sin(phi / 180.0),
                          cosphi(cphi, 0.0),
                          sinphi(sphi, 0.0),
                          sinphi2 = sinphi * sinphi,
                          sn = nju2 - sinphi2,
-                         sq = squareRoot(sn, 0);
+                         sq = Calculation::squareRoot(sn, 0);
 
     if (sq.imag() > 0){
-        sq = squareRoot(sn, 1);
+        sq = Calculation::squareRoot(sn, 1);
     }
 
     std::complex<double> ch1 = cosphi - sq,

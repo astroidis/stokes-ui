@@ -26,8 +26,8 @@ public:
 
     Task12(int idx, double alfa, double beta);
     std::pair<Calculation::StokesVector, Calculation::NaturalStokesVector>
-        calcRadiation(std::complex<double> nju, std::complex<double> phi);
-    Reflection calcReflection(std::complex<double> nju, std::complex<double> phi,
+        calcRadiation(std::complex<double> nju, double phi);
+    Reflection calcReflection(std::complex<double> nju, double phi,
                               Calculation::Gradient &gradient, bool isanalytic);
 };
 

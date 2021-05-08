@@ -11,6 +11,7 @@ using std::abs;
 using std::sin;
 using std::cos;
 using std::vector;
+using Calculation::PI;
 
 
 double Task3::len2rect(double re, double im, double re1, double re2, double im1, double im2)
@@ -58,7 +59,7 @@ double Task3::chi2P(double chi, int df)
 
     // If chi is very large, exp(-m) will underflow to 0.
     double m = chi / 2.0;
-    double sum = term = std::exp(-m);
+    double term = std::exp(-m), sum = term;
 
     for (int i = 1; i < df / 2; i++){
         term *= m / i;
@@ -183,13 +184,13 @@ std::map<std::string, double> Task3::calcStat(vector<ItemC> data)
     }
 
     midP = mean(data);
-    statP = stdev(data);
+    sdP = stdev(data);
 
     stat["Всего"] = countP;
     stat["Среднее (по всем)"] = midP;
     stat["СКО (по всем)"] = sdP;
 
-    vector<double> data_n;
+    vector<ItemC> data_n;
     data_n.reserve(data.size());
     for (auto x : data){
         if (x.iscalc && (abs(x.value - midP) < sdP)){
@@ -199,9 +200,9 @@ std::map<std::string, double> Task3::calcStat(vector<ItemC> data)
 
     double mid = mean(data_n);
     double sd = stdev(data_n);
-    auto compare = [](const auto &x1, const auto &x2){return x1.value < x2.value;};
-    double min_v = std::min_element(data_n.begin(), data_n.end(), compare);
-    double max_v = std::max(data_n.begin(), data_n.end(), compare);
+    auto compare = [](const ItemC &x1, const ItemC &x2)->bool{return x1.value < x2.value;};
+    double min_v = (*std::min_element(data_n.begin(), data_n.end(), compare)).value;
+    double max_v = (*std::max_element(data_n.begin(), data_n.end(), compare)).value;
 
     for (auto &x : data){
         x.value_norm = (x.value - mid) / sd;
@@ -214,8 +215,8 @@ std::map<std::string, double> Task3::calcStat(vector<ItemC> data)
     stat["СКО"] = sd;
 
     int count_n = data_n.size();
-    double min_n = std::min_element(data_n.begin(), data_n.end(), compare);
-    double max_n = std::max_element(data_n.begin(), data_n.end(), compare);
+    double min_n = (*std::min_element(data_n.begin(), data_n.end(), compare)).value;
+    double max_n = (*std::max_element(data_n.begin(), data_n.end(), compare)).value;
 
     stat["Минимальное (норм)"] = min_n;
     stat["Максимальное (норм)"] = max_n;
@@ -230,7 +231,7 @@ std::map<std::string, double> Task3::calcStat(vector<ItemC> data)
         double value = std::round(x.value * 100) / 100;
         int index = -1;
 
-        for (int j = 0; j < intervals.size(); j++){
+        for (int j = 0; j < static_cast<int>(intervals.size()); j++){
             if (abs(value - intervals[j].high) < 1e-3){
                 if (j < Interval::INTERVAL_COUNT / 2)
                     index = j + 1;
@@ -264,7 +265,7 @@ std::map<std::string, double> Task3::calcStat(vector<ItemC> data)
         intervals[index].value_count++;
     }  // for (auto x : data_n)
 
-    std::string pi = "Pi[%d]", n = "N[%d]";
+    const char *pi = "Pi[%d]", *n = "N[%d]";
     char s[10];
     int i = 0;
 
@@ -287,7 +288,7 @@ std::map<std::string, double> Task3::calcStat(vector<ItemC> data)
     stat["Хи-квадрат (эмп.)"] = SumHi;
     stat["Хи-квадрат (теор.)"] = SumHiTeor;
 
-    vector<ItemC> d;
+    vector<ItemC> d, e;
     d.reserve(data.size());
     e.reserve(data.size());
     for (auto x : data){
@@ -297,9 +298,9 @@ std::map<std::string, double> Task3::calcStat(vector<ItemC> data)
 
     double  midE = mean(d),
             sdE = stdev(d),
-            Ek = std::max_element(d.begin(), d.end(),
+            Ek = (*std::max_element(d.begin(), d.end(),
                                  [=](const auto &x1, const auto &x2){
-                                 return abs(x1.value - midE) < abs(x2.value - midE);}),
+                                 return abs(x1.value - midE) < abs(x2.value - midE);})).value,
             Tk = Ek / sdE,
             FTk = 2 * Calculation::laplace(Tk);
 
@@ -317,22 +318,38 @@ Task3::calcPlaneMaterial(std::vector<Task3::Sample> data, std::vector<Task3::Mat
     int idx = 0;
     double val = data[0].lambda;
 
-    for (int i = 0; i < data.size(); i++){
+    for (int i = 0; i < static_cast<int>(data.size()); i++){
         if (data[i].lambda < val){
             idx = i;
-            val = x.lambda;
+            val = data[i].lambda;
         }
     }
 
-    for (int i = 0; i < data.size(); i++){
+    for (int i = 0; i < static_cast<int>(data.size()); i++){
         double  Tetta = Calculation::PI * data[i].tetta / 180.0,
                 Lambda = data[i].lambda;
 
         switch (type){
             case PlaneTypes::IS_DIEL:
+                if (i < idx){
+                    data[i].n = sin(Tetta) / cos(Tetta)
+                                * sqrt(1 + Lambda * Lambda - 2 * Lambda * cos(2 * Tetta))
+                                / (1 - Lambda);
+                }
+                else{
+                    data[i].n = sin(Tetta) / cos(Tetta)
+                                * sqrt(1 + Lambda * Lambda + 2 * Lambda * cos(2 * Tetta))
+                                / (1 + Lambda);
+                }
                 break;
 
             case PlaneTypes::IS_METAL:
+                if (i < idx){
+                    data[i].n = sin(Tetta) * sin(Tetta) / cos(Tetta) * (1 + Lambda) / (1 - Lambda);
+                }
+                else{
+                    data[i].n = sin(Tetta) * sin(Tetta) / cos(Tetta) * (1 - Lambda) / (1 + Lambda);
+                }
                 break;
 
             default:
@@ -346,22 +363,98 @@ Task3::calcPlaneMaterial(std::vector<Task3::Sample> data, std::vector<Task3::Mat
     }
 
     double nmid = a / (data.size() - 1);
+    std::complex<double> coef;
 
+    int ParamCount, i2;
     switch (type) {
         case PlaneTypes::IS_DIEL:
+            coef = std::complex(nmid, 0.0);
             break;
 
         case PlaneTypes::IS_METAL:
+        {
+            int count = data.size() - 1;
+
+            if (count / 2 == 1){
+                ParamCount = count / 2 + 1;
+                i2 = count - 1;
+            }
+            else{
+                ParamCount = count / 2;
+                i2 = count / 2;
+            }
+
+            vector<Param> params;
+            params.reserve(ParamCount);
+            for (int i = 0; i < ParamCount; i++){
+                params.push_back(Param {0, 0, 0, 0, 0, 0, 0, 0});
+            }
+
+            for (int i = 0; i < static_cast<int>(data.size()); i++){
+                if (i < ParamCount){
+                    params[i].tetta1 = data[i].tetta;
+                    params[i].a1 = data[i].n;
+                }
+                if (i >= i2){
+                    params[i].tetta2 = data[i].tetta;
+                    params[i].a2 = data[i].n;
+                }
+            }
+
+            double u_mid, v_mid, c_mid;
+            for (auto &x : params){
+                double d1 = det2(
+                        std::pow(x.a1, 4) + x.a1*std::pow(sin(x.tetta1*Calculation::PI/180), 2),
+                        std::pow(x.a2, 4) + x.a2*std::pow(sin(x.tetta2*Calculation::PI/180), 2),
+                        x.a1 * x.a1,
+                        x.a2 * x.a2
+                    );
+                double d2 = det2(1, 1, x.a1*x.a1, x.a2*x.a2);
+
+                double d4, u, v;
+                if (d1 / d2 < 0){
+                    // все хуйня
+                }
+                else{
+                    v = sqrt(d1 / d2);
+                    double d3 = det2(
+                            1,
+                            1,
+                            std::pow(x.a1, 4) + x.a1*std::pow(sin(x.tetta1*Calculation::PI/180), 2),
+                            std::pow(x.a2, 4) + x.a2*std::pow(sin(x.tetta2*Calculation::PI/180), 2)
+                        );
+                    d4 = det2(1, 1, x.a1*x.a1, x.a2*x.a2);
+                    u = d3 / d4;
+                }
+
+                if ( (abs(d2) > 1e-3) && (abs(d4) > 1e-3) ){
+                    v_mid += v;
+                    u_mid += u;
+                    c_mid += 1;
+                }
+                else {
+                    // все хуйня
+                }
+            }  // for (auto &x : params)
+
+            v_mid /= c_mid;
+            u_mid /= c_mid;
+
+            double re = sqrt( (u_mid + sqrt(u_mid*u_mid + 4*v_mid*v_mid)) / 2 );
+            coef = std::complex(re, -v_mid/re);
+
             break;
+        }
 
         default:
             break;
     }
 
-    int idx = 0, length = 1e+8;
+    idx = 0;
+    int length = 1e+8;
 
-    for (int i = 0; i < materials.size(); i++){
-        materials[i].length = len2rect(coef.real, coef.imag, materials[i].re_min,
+    for (int i = 0; i < static_cast<int>(materials.size()); i++){
+        materials[i].length = len2rect(coef.real(), coef.imag(), materials[i].re_min,
                                        materials[i].re_max, materials[i].im_min, materials[i].im_max);
         if (materials[i].length < length){
             idx = i;
@@ -371,3 +464,6 @@ Task3::calcPlaneMaterial(std::vector<Task3::Sample> data, std::vector<Task3::Mat
 
     return std::pair {idx, materials[idx]};
 }
+
+
+int Task3::Interval::INTERVAL_COUNT = 5;

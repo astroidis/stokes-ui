@@ -15,19 +15,19 @@ Task12::Task12(int idx, double alfa, double beta)
     SV = Calculation::StokesVector();
     NSV = Calculation::NaturalStokesVector();
     for (int i = 0; i < 4; i++){
-        I[i] = Calculation::Intensity(0, 0, 0);
+        I[i] = Calculation::Intensity{0, 0, 0};
     }
 }
 
 std::pair<Calculation::StokesVector, Calculation::NaturalStokesVector>
-Task12::calcRadiation(std::complex<double> nju, std::complex<double> phi)
+Task12::calcRadiation(std::complex<double> nju, double phi)
 {
     SV.calculate(I[0], I[1], I[2], I[3]);
     NSV.calculateNatural(SV, nju, phi);
-    return std::make_pair(V, N);
+    return std::make_pair(SV, NSV);
 }
 
-Reflection Task12::calcReflection(std::complex<double> nju, std::complex<double> phi,
+Reflection Task12::calcReflection(std::complex<double> nju, double phi,
                                   Calculation::Gradient &gradient, bool isanalytic)
 {
     auto rad = calcRadiation(nju, phi);
@@ -48,9 +48,7 @@ Reflection Task12::calcReflection(std::complex<double> nju, std::complex<double>
         gradient.V = U / sqrt(Q*Q + V*V + U*U);
     }
 
-    double x = x0 = 0;
-    double y = y0 = 0;
-    double x1 = x2 = 0;
+    double x = 0, x0 = 0, y = 0, y0 = 0, x1 = 0, x2 = 0;
 
     if (isanalytic){
         bool done = true;
@@ -79,11 +77,11 @@ Reflection Task12::calcReflection(std::complex<double> nju, std::complex<double>
         done = std::get<2>(gr);
 
         if (!done){
-            return;
+            std::exit(-1);
         }
 
         if (abs(gradient.Fxy(x, y)) > 1e-5){
-            return;
+            std::exit(-1);
         }
 
         double a = cos(-2*y) + gradient.W;
@@ -92,7 +90,7 @@ Reflection Task12::calcReflection(std::complex<double> nju, std::complex<double>
         double d = b * b - 4 * c * a;
 
         if (d < 0){
-            return;
+            std::exit(-1);
         }
 
         x1 = std::atan( (-b + sqrt(d)) / (2 * a) );

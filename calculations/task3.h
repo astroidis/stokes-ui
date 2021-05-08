@@ -50,7 +50,7 @@ namespace Task3
     class ItemC3 : public ItemC
     {
     public:
-        double dGamma, Afla, Beta;
+        double dGamma, Alfa, Beta;
 
         ItemC3(double dgamma, double alfa, double beta);
         double calc() override;
@@ -60,7 +60,7 @@ namespace Task3
     class Interval
     {
     public:
-        static int INTERVAL_COUNT = 5;
+        static int INTERVAL_COUNT;
         int number, value_count;
         double low, high, laplaceValueLow, laplaceValueHigh, pi, npi, ni_npi,
                ni_npi_norm;
