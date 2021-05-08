@@ -27,7 +27,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionLoadData12, &QAction::triggered, this, &MainWindow::loadTable);
     connect(ui->actionParameters, &QAction::triggered, this, &MainWindow::createParameterTable);
     connect(ui->actionPlot, &QAction::triggered, this, &MainWindow::loadPlot);
-    connect(ui->actionCalculate12, &QAction::triggered, this, &MainWindow::runPython);
     connect(ui->actionNewExperiment, &QAction::triggered, this, &MainWindow::addNewExperiment);
     connect(ui->actionOpenExperiment, &QAction::triggered, this, &MainWindow::openAllExperiments);
     connect(ui->actionSelect, &QAction::triggered, this, &MainWindow::openExperimentSelector);
@@ -133,15 +132,6 @@ void MainWindow::loadPlot()
     w->layout()->addWidget(lbl);
     ui->mdiArea->addSubWindow(w);
     w->show();
-}
-
-void MainWindow::runPython()
-{
-    QProcess pyproc;
-    QStringList args;
-    args << "C:\\Users\\User\\Documents\\Code\\sketch\\sample_plots.py";
-    QString prog = "C:\\Users\\User\\Documents\\Code\\sketch\\Scripts\\python.exe";
-    pyproc.startDetached(prog, args);
 }
 
 void MainWindow::addNewExperiment()

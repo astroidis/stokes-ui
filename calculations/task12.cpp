@@ -19,10 +19,15 @@ Task12::Task12(int idx, double alfa, double beta)
     }
 }
 
+void Task12::loadIntensities(int idx, double i, double tau, double phi)
+{
+    I[idx] = Calculation::Intensity {i, tau, phi};
+}
+
 std::pair<Calculation::StokesVector, Calculation::NaturalStokesVector>
 Task12::calcRadiation(std::complex<double> nju, double phi)
 {
-    SV.calculate(I[0], I[1], I[2], I[3]);
+//    SV.calculate(I[0], I[1], I[2], I[3]);
     NSV.calculateNatural(SV, nju, phi);
     return std::make_pair(SV, NSV);
 }
@@ -50,17 +55,18 @@ Reflection Task12::calcReflection(std::complex<double> nju, double phi,
 
     double x = 0, x0 = 0, y = 0, y0 = 0, x1 = 0, x2 = 0;
 
+    double Alfa, Beta;
     if (isanalytic){
-        bool done = true;
+//        bool done = true;
         double cg = cos(gradient.Gamma);
         double a = Q*Q + U*U + cg*cg * (Q*Q + V*V + U*U);
-        double Beta = abs(std::atan(V / a));
+        Beta = abs(std::atan(V / a));
 
         if (gradient.Gamma * V > 0){
             Beta = -Beta;
         }
 
-        double Alfa = abs(std::atan(sin(2*Beta) / cos(2*Beta) * cg));
+        Alfa = abs(std::atan(sin(2*Beta) / cos(2*Beta) * cg));
 
         if (abs(U) < 1e-5){
             Alfa = 0;
@@ -70,11 +76,10 @@ Reflection Task12::calcReflection(std::complex<double> nju, double phi,
         }
     }
     else {
-        bool done;
         auto gr = gradient.gradientMethod(x0, y0, 1e-5);
         x = std::get<0>(gr);
         y = std::get<1>(gr);
-        done = std::get<2>(gr);
+        bool done = std::get<2>(gr);
 
         if (!done){
             std::exit(-1);

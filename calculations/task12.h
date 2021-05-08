@@ -25,6 +25,7 @@ public:
     std::array<Calculation::Intensity, 4> I;
 
     Task12(int idx, double alfa, double beta);
+    void loadIntensities(int idx, double i, double tau, double phi);
     std::pair<Calculation::StokesVector, Calculation::NaturalStokesVector>
         calcRadiation(std::complex<double> nju, double phi);
     Reflection calcReflection(std::complex<double> nju, double phi,

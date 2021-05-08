@@ -156,7 +156,7 @@ vector<Task3::Interval> Task3::getIntervals(int icount, double imin, double imax
 double mean(vector<Task3::ItemC> data)
 {
     double sum = 0;
-    for (auto val : data){
+    for (const auto &val : data){
         sum += val.value;
     }
     return sum / data.size();
@@ -166,7 +166,7 @@ double stdev(vector<Task3::ItemC> data)
 {
     double m = mean(data);
     double s = 0;
-    for (auto x : data){
+    for (const auto &x : data){
         s += (x.value - m) * (x.value - m);
     }
 
@@ -177,9 +177,9 @@ std::map<std::string, double> Task3::calcStat(vector<ItemC> data)
 {
     std::map<std::string, double> stat;
 
-    double countP, midP, sdP;
+    double countP = 0, midP, sdP;
 
-    for(auto item : data){
+    for(const auto &item : data){
         countP += item.iscalc ? 1 : 0;
     }
 
@@ -192,7 +192,7 @@ std::map<std::string, double> Task3::calcStat(vector<ItemC> data)
 
     vector<ItemC> data_n;
     data_n.reserve(data.size());
-    for (auto x : data){
+    for (const auto &x : data){
         if (x.iscalc && (abs(x.value - midP) < sdP)){
             data_n.push_back(x);
         }
@@ -227,7 +227,7 @@ std::map<std::string, double> Task3::calcStat(vector<ItemC> data)
         SumProb += x.pi;
     }
 
-    for (auto x : data_n){
+    for (const auto &x : data_n){
         double value = std::round(x.value * 100) / 100;
         int index = -1;
 
@@ -291,7 +291,7 @@ std::map<std::string, double> Task3::calcStat(vector<ItemC> data)
     vector<ItemC> d, e;
     d.reserve(data.size());
     e.reserve(data.size());
-    for (auto x : data){
+    for (const auto &x : data){
         if (x.iscalc)
             d.push_back(x);
     }
@@ -401,7 +401,7 @@ Task3::calcPlaneMaterial(std::vector<Task3::Sample> data, std::vector<Task3::Mat
                 }
             }
 
-            double u_mid, v_mid, c_mid;
+            double u_mid = 0, v_mid = 0, c_mid = 0;
             for (auto &x : params){
                 double d1 = det2(
                         std::pow(x.a1, 4) + x.a1*std::pow(sin(x.tetta1*Calculation::PI/180), 2),
@@ -411,7 +411,7 @@ Task3::calcPlaneMaterial(std::vector<Task3::Sample> data, std::vector<Task3::Mat
                     );
                 double d2 = det2(1, 1, x.a1*x.a1, x.a2*x.a2);
 
-                double d4, u, v;
+                double d4 = 0, u = 0, v = 0;
                 if (d1 / d2 < 0){
                     // все хуйня
                 }
