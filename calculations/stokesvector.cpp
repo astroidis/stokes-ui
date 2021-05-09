@@ -1,6 +1,7 @@
 #include "calculation.h"
 
 #include <array>
+#include <QDebug>
 
 using std::cos;
 using std::sin;
@@ -29,7 +30,7 @@ double Calculation::StokesVector::p()
     }
 }
 
-void Calculation::StokesVector::swap(int k, int n, std::array<std::array<double, 5>, 4> &A)
+void Calculation::StokesVector::swap(int k, int n, double A[4][5])
 {
     double z = A[k][k];
     int i = k;
@@ -52,8 +53,8 @@ void Calculation::StokesVector::swap(int k, int n, std::array<std::array<double,
 
 void Calculation::StokesVector::calculate(Intensity I1, Intensity I2, Intensity I3, Intensity I4)
 {
-    std::array<std::array<double, 5>, 4> A;
-    std::array<double, 4> X = {0, 0, 0, 0};
+    double A[4][5];
+    double X[4] = {0, 0, 0, 0};
 
     J = 0.0;
     Q = 0.0;
@@ -102,11 +103,13 @@ void Calculation::StokesVector::calculate(Intensity I1, Intensity I2, Intensity 
                 swap(k, idx, A);
             }
             else {
+                qDebug() << "There can be error in:  idx != k\n"
+                       << "idx =" << idx << " k=" << k << "\n";
                 return;
             }
         }
 
-        for (int j = k+1; k < 4; j++){
+        for (int j = k+1; j < 4; j++){
             double r = A[j][k] / A[k][k];
 
             for (int i = 0; i < 5; i++){
@@ -123,6 +126,8 @@ void Calculation::StokesVector::calculate(Intensity I1, Intensity I2, Intensity 
         }
 
         if (A[k][k] == 0){
+            qDebug() << "There can be error in : A[k][k] == 0\n"
+                   << "A[k][k]=" << A[k][k] << "\n";
             return;
         }
 

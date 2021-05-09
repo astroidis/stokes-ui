@@ -2,16 +2,20 @@
 #include "ui_calc12window.h"
 
 #include <QSqlRecord>
+#include <QMessageBox>
+#include <QDebug>
 
 #include "calculations/task12.h"
 
 
 Calc12Window::Calc12Window(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::Calc12Window)
+    ui(new Ui::Calc12Window),
+    tb(new QToolBar(this))
 {
     ui->setupUi(this);
     openTable();
+    setupToolbar();
 
     connect(ui->rCalcAllButton, &QPushButton::clicked, this, &Calc12Window::makeCalculations);
 }
@@ -24,6 +28,7 @@ Calc12Window::~Calc12Window()
 void Calc12Window::openTable()
 {
     model = new QSqlTableModel(this, QSqlDatabase::database("stokes_db"));
+    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     model->setTable("calculation_12");
     model->select();
 
@@ -60,6 +65,8 @@ void Calc12Window::makeCalculations()
         auto vectors = t.calcRadiation(std::complex(1.4, -4.53), 52.0);
         auto sv = vectors.first;
         auto nsv = vectors.second;
+        auto gr = Calculation::Gradient();
+        Reflection ref = t.calcReflection(std::complex(1.4, -4.53), 52.0, gr, true);
 
         rec.setValue("J", sv.J);
         rec.setValue("Q", sv.Q);
@@ -69,6 +76,61 @@ void Calc12Window::makeCalculations()
         rec.setValue("Q0", nsv.Q);
         rec.setValue("U0", nsv.U);
         rec.setValue("V0", nsv.V);
+        rec.setValue("Alfa1", ref.alfa1);
+        rec.setValue("Beta1", ref.beta1);
+        rec.setValue("Re_Hi", ref.re_hi);
+        rec.setValue("Im_Hi", ref.im_hi);
         model->setRecord(i, rec);
     }
+    ui->tableView->resizeColumnsToContents();
+}
+
+void Calc12Window::saveData()
+{
+    model->submitAll();
+}
+
+void Calc12Window::loadData()
+{
+    QMessageBox msg(QMessageBox::Warning, "Warning", "Unsaved data will be lost");
+    msg.addButton("Continue", QMessageBox::AcceptRole);
+    msg.addButton("Cancel", QMessageBox::RejectRole);
+    switch (msg.exec()){
+        case QMessageBox::AcceptRole:
+            qDebug() << "Reloading data\n";
+            model->clear();
+            qDebug() << "Model cleared\n";
+            model->select();
+            qDebug() << "Model populated\n";
+            ui->tableView->reset();
+            qDebug() << "Tableview reseted\n";
+            break;
+
+        case QMessageBox::RejectRole:
+            qDebug() << "Loading canceled\n";
+            msg.close();
+            break;
+
+        default:
+            qDebug() << "Closing dialog\n";
+            msg.close();
+            break;
+    }
+
+}
+
+void Calc12Window::setupToolbar()
+{
+//    tb->setOrientation(Qt::Horizontal);
+
+    QAction *saveAct = new QAction("Save", this);
+    tb->addAction(saveAct);
+    connect(saveAct, &QAction::triggered, this, &Calc12Window::saveData);
+
+    QAction *loadAct = new QAction("Load", this);
+    tb->addAction(loadAct);
+    connect(loadAct, &QAction::triggered, this, &Calc12Window::loadData);
+
+    ui->toolLayout->addWidget(tb);
+    tb->show();
 }

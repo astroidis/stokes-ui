@@ -50,7 +50,7 @@ namespace Calculation
         std::complex<double> squareRoot(std::complex<double> v, int index);
 
     private:
-        void swap(int k, int n, std::array<std::array<double, 5>, 4> &A);
+        void swap(int k, int n, double A[4][5]);
     };
 
 

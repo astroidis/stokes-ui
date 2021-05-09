@@ -27,7 +27,7 @@ void Task12::loadIntensities(int idx, double i, double tau, double phi)
 std::pair<Calculation::StokesVector, Calculation::NaturalStokesVector>
 Task12::calcRadiation(std::complex<double> nju, double phi)
 {
-//    SV.calculate(I[0], I[1], I[2], I[3]);
+    SV.calculate(I[0], I[1], I[2], I[3]);
     NSV.calculateNatural(SV, nju, phi);
     return std::make_pair(SV, NSV);
 }
