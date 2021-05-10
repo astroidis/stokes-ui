@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <QTableView>
 #include <QSqlTableModel>
+#include <QSqlQueryModel>
+#include <QTreeWidget>
 
 namespace Ui {
 class Calc3Window;
@@ -19,12 +21,25 @@ public:
 
 private:
     Ui::Calc3Window *ui;
-    QTableView *c1Calculated;
-    QTableView *c2Calculated;
-    QTableView *c3Calculated;
     QSqlTableModel *modelC1Calc;
     QSqlTableModel *modelC2Calc;
     QSqlTableModel *modelC3Calc;
+    QSqlQueryModel *modelC1Stat;
+    QSqlQueryModel *modelC2Stat;
+    QSqlQueryModel *modelC3Stat;
+    QTableView *tableC1Stat;
+    QTableView *tableC2Stat;
+    QTableView *tableC3Stat;
+    QTreeWidgetItem *c1Item;
+    QTreeWidgetItem *c2Item;
+    QTreeWidgetItem *c3Item;
+    QTreeWidgetItem *c1Child;
+    QTreeWidgetItem *c2Child;
+    QTreeWidgetItem *c3Child;
+
+    void calcC1();
+    void calcC2();
+    void calcC3();
 
 private slots:
     void c1rbtnClicked();
@@ -32,6 +47,7 @@ private slots:
     void c3rbtnClicked();
     void calcrbtnClicked();
 //    void srcrbtnClicked();
+    void calcParamPbtnClicked();
 };
 
 #endif // CALC3WINDOW_H

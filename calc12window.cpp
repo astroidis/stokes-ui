@@ -66,7 +66,14 @@ void Calc12Window::makeCalculations()
         auto sv = vectors.first;
         auto nsv = vectors.second;
         auto gr = Calculation::Gradient();
-        Reflection ref = t.calcReflection(std::complex(1.4, -4.53), 52.0, gr, true);
+        bool a = true;
+        if (ui->analyticRBtn->isChecked()){
+            a = true;
+        }
+        else if (ui->numericRBtn->isChecked()){
+            a = false;
+        }
+        Reflection ref = t.calcReflection(std::complex(1.4, -4.53), 52.0, gr, a);
 
         rec.setValue("J", sv.J);
         rec.setValue("Q", sv.Q);
@@ -98,12 +105,9 @@ void Calc12Window::loadData()
     switch (msg.exec()){
         case QMessageBox::AcceptRole:
             qDebug() << "Reloading data\n";
-            model->clear();
-            qDebug() << "Model cleared\n";
+//            model->clear();
             model->select();
-            qDebug() << "Model populated\n";
             ui->tableView->reset();
-            qDebug() << "Tableview reseted\n";
             break;
 
         case QMessageBox::RejectRole:

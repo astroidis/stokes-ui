@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <algorithm>
+#include <QDebug>
 #include "calculation.h"
 
 using std::sqrt;
@@ -93,6 +94,7 @@ double Task3::ItemC1::calc()
     }
     else {
         iscalc = false;
+        qDebug() << "ItemC1::calc() : V == 0\n";
         return 0.0;  // throw something
     }
 }
@@ -113,6 +115,7 @@ double Task3::ItemC2::calc()
         return U / V;
     }
     else {
+        qDebug() << "ItemC2::calc() : V == 0\n";
         iscalc = false;
         return 0.0;  // throw something
     }
