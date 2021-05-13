@@ -23,6 +23,7 @@ public slots:
     void makeCalculations();
     void saveData();
     void loadData();
+    void calculateOne();
 
 private:
     Ui::Calc12Window *ui;

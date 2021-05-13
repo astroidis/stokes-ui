@@ -18,6 +18,7 @@ Calc12Window::Calc12Window(QWidget *parent) :
     setupToolbar();
 
     connect(ui->rCalcAllButton, &QPushButton::clicked, this, &Calc12Window::makeCalculations);
+    connect(ui->rCalcButton, &QPushButton::clicked, this, &Calc12Window::calculateOne);
 }
 
 Calc12Window::~Calc12Window()
@@ -121,6 +122,61 @@ void Calc12Window::loadData()
             break;
     }
 
+}
+
+void Calc12Window::calculateOne()
+{
+    QModelIndex ind = ui->tableView->selectionModel()->selectedRows().back();
+    int i = ind.row();
+    QSqlRecord rec = model->record(i);
+    double alfa = rec.value("Alfa").toDouble();
+    double beta = rec.value("Beta").toDouble();
+    Task12 t(i, alfa, beta);
+    t.loadIntensities(0,
+                      rec.value("I1").toDouble(),
+                      rec.value("Tau1").toDouble(),
+                      rec.value("Phi1").toDouble());
+    t.loadIntensities(1,
+                      rec.value("I2").toDouble(),
+                      rec.value("Tau2").toDouble(),
+                      rec.value("Phi2").toDouble());
+    t.loadIntensities(2,
+                      rec.value("I3").toDouble(),
+                      rec.value("Tau3").toDouble(),
+                      rec.value("Phi3").toDouble());
+    t.loadIntensities(3,
+                      rec.value("I4").toDouble(),
+                      rec.value("Tau4").toDouble(),
+                      rec.value("Phi4").toDouble());
+
+    auto vectors = t.calcRadiation(std::complex(1.4, -4.53), 52.0);
+    auto sv = vectors.first;
+    auto nsv = vectors.second;
+    auto gr = Calculation::Gradient();
+    bool a = true;
+    if (ui->analyticRBtn->isChecked()){
+        a = true;
+    }
+    else if (ui->numericRBtn->isChecked()){
+        a = false;
+    }
+    Reflection ref = t.calcReflection(std::complex(1.4, -4.53), 52.0, gr, a);
+
+    rec.setValue("J", QString::number(sv.J, 'f', 4));
+    rec.setValue("Q", QString::number(sv.Q, 'f', 4));
+    rec.setValue("U", QString::number(sv.U, 'f', 4));
+    rec.setValue("V", QString::number(sv.V, 'f', 4));
+    rec.setValue("J0", QString::number(nsv.J, 'f', 4));
+    rec.setValue("Q0", QString::number(nsv.Q, 'f', 4));
+    rec.setValue("U0", QString::number(nsv.U, 'f', 4));
+    rec.setValue("V0", QString::number(nsv.V, 'f', 4));
+    rec.setValue("Alfa1", QString::number(ref.alfa1, 'f', 4));
+    rec.setValue("Beta1", QString::number(ref.beta1, 'f', 4));
+    rec.setValue("Re_Hi", QString::number(ref.re_hi, 'f', 4));
+    rec.setValue("Im_Hi", QString::number(ref.im_hi, 'f', 4));
+    model->setRecord(i, rec);
+
+    ui->tableView->resizeColumnsToContents();
 }
 
 void Calc12Window::setupToolbar()

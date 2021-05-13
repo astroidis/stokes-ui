@@ -1,6 +1,7 @@
 #include "calculation.h"
 
-#include <array>
+#include <vector>
+#include <algorithm>
 #include <QDebug>
 
 using std::cos;
@@ -43,12 +44,24 @@ void Calculation::StokesVector::swap(int k, int n, double A[4][5])
     }
 
     if (i > k){
-        for (int j = k; j > n; j++){
+        for (int j = k; j < n; j++){
             z = A[i][j];
             A[i][j] = A[k][j];
             A[k][j] = z;
         }
     }
+}
+
+void printMatrix(double m[4][5]){
+    QDebug deb = qDebug().noquote();
+
+    for (int i = 0; i < 4; i++){
+        for (int j = 0; j < 5; j++){
+            deb << QString("%1").arg(m[i][j], 7, 'f', 4);
+        }
+        deb << '\n';
+    }
+    deb << "\n\n";
 }
 
 void Calculation::StokesVector::calculate(Intensity I1, Intensity I2, Intensity I3, Intensity I4)
@@ -72,9 +85,9 @@ void Calculation::StokesVector::calculate(Intensity I1, Intensity I2, Intensity 
     A[3][1] = cos(2 * I4.phi);
 
     A[0][2] = sin(2 * I1.phi) * cos(I1.tau);
-    A[1][2] = sin(2 * I1.phi) * cos(I1.tau);
-    A[2][2] = sin(2 * I2.phi) * cos(I1.tau);
-    A[3][2] = sin(2 * I3.phi) * cos(I1.tau);
+    A[1][2] = sin(2 * I2.phi) * cos(I2.tau);
+    A[2][2] = sin(2 * I3.phi) * cos(I3.tau);
+    A[3][2] = sin(2 * I4.phi) * cos(I4.tau);
 
     A[0][3] = sin(2 * I1.phi) * sin(I1.tau);
     A[1][3] = sin(2 * I2.phi) * sin(I2.tau);
@@ -86,20 +99,22 @@ void Calculation::StokesVector::calculate(Intensity I1, Intensity I2, Intensity 
     A[2][4] = 2 * I3.i;
     A[3][4] = 2 * I4.i;
 
+    qDebug() << "init matrix";
+    printMatrix(A);
+
     for (int k = 0; k < 4; k++){
         if (abs(A[k][k]) < 1e-10){
-            double max = abs(A[k][k]);
-            int idx = k;
-
-            for (int z = k+1; z < 5; z++){
-                double c = abs(A[k][z]);
-                if (c > max){
-                    idx = z;
-                    max = c;
-                }
+            std::vector<double> list;
+            list.reserve(4);
+            for (int q = 0; q < 4; q++){
+                list.push_back(abs(A[q][k]));
             }
 
+            auto m = std::max_element(list.begin(), list.end());
+            auto idx = std::distance(list.begin(), m);
+
             if (idx != k){
+                qDebug() << "swap";
                 swap(k, idx, A);
             }
             else {
@@ -113,9 +128,10 @@ void Calculation::StokesVector::calculate(Intensity I1, Intensity I2, Intensity 
             double r = A[j][k] / A[k][k];
 
             for (int i = 0; i < 5; i++){
-                A[j][i] -= r * A[k][j];
+                A[j][i] -= r * A[k][i];
             }
         }
+        printMatrix(A);
     }  // end for (int k = 0; k < 4; k++)
 
     for (int k = 3; k > -1; k--){
