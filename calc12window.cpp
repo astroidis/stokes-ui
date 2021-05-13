@@ -34,9 +34,9 @@ void Calc12Window::openTable()
     model->select();
 
     ui->tableView->setModel(model);
-    ui->tableView->resizeColumnsToContents();
     ui->tableView->resizeRowsToContents();
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tableView->hideColumn(0);
 }
 
 void Calc12Window::makeCalculations()
@@ -76,21 +76,22 @@ void Calc12Window::makeCalculations()
         }
         Reflection ref = t.calcReflection(std::complex(1.4, -4.53), 52.0, gr, a);
 
-        rec.setValue("J", sv.J);
-        rec.setValue("Q", sv.Q);
-        rec.setValue("U", sv.U);
-        rec.setValue("V", sv.V);
-        rec.setValue("J0", nsv.J);
-        rec.setValue("Q0", nsv.Q);
-        rec.setValue("U0", nsv.U);
-        rec.setValue("V0", nsv.V);
-        rec.setValue("Alfa1", ref.alfa1);
-        rec.setValue("Beta1", ref.beta1);
-        rec.setValue("Re_Hi", ref.re_hi);
-        rec.setValue("Im_Hi", ref.im_hi);
+        rec.setValue("J", QString::number(sv.J, 'f', 4));
+        rec.setValue("Q", QString::number(sv.Q, 'f', 4));
+        rec.setValue("U", QString::number(sv.U, 'f', 4));
+        rec.setValue("V", QString::number(sv.V, 'f', 4));
+        rec.setValue("P", QString::number(sv.p(), 'f', 4));
+        rec.setValue("J0", QString::number(nsv.J, 'f', 4));
+        rec.setValue("Q0", QString::number(nsv.Q, 'f', 4));
+        rec.setValue("U0", QString::number(nsv.U, 'f', 4));
+        rec.setValue("V0", QString::number(nsv.V, 'f', 4));
+        rec.setValue("P0", QString::number(nsv.p(), 'f', 4));
+        rec.setValue("Alfa1", QString::number(ref.alfa1, 'f', 4));
+        rec.setValue("Beta1", QString::number(ref.beta1, 'f', 4));
+        rec.setValue("Re_Hi", QString::number(ref.re_hi, 'f', 4));
+        rec.setValue("Im_Hi", QString::number(ref.im_hi, 'f', 4));
         model->setRecord(i, rec);
     }
-    ui->tableView->resizeColumnsToContents();
 }
 
 void Calc12Window::saveData()
@@ -106,7 +107,6 @@ void Calc12Window::loadData()
     switch (msg.exec()){
         case QMessageBox::AcceptRole:
             qDebug() << "Reloading data\n";
-//            model->clear();
             model->select();
             ui->tableView->reset();
             break;
@@ -166,17 +166,17 @@ void Calc12Window::calculateOne()
     rec.setValue("Q", QString::number(sv.Q, 'f', 4));
     rec.setValue("U", QString::number(sv.U, 'f', 4));
     rec.setValue("V", QString::number(sv.V, 'f', 4));
+    rec.setValue("P", QString::number(sv.p(), 'f', 4));
     rec.setValue("J0", QString::number(nsv.J, 'f', 4));
     rec.setValue("Q0", QString::number(nsv.Q, 'f', 4));
     rec.setValue("U0", QString::number(nsv.U, 'f', 4));
     rec.setValue("V0", QString::number(nsv.V, 'f', 4));
+    rec.setValue("P0", QString::number(nsv.p(), 'f', 4));
     rec.setValue("Alfa1", QString::number(ref.alfa1, 'f', 4));
     rec.setValue("Beta1", QString::number(ref.beta1, 'f', 4));
     rec.setValue("Re_Hi", QString::number(ref.re_hi, 'f', 4));
     rec.setValue("Im_Hi", QString::number(ref.im_hi, 'f', 4));
     model->setRecord(i, rec);
-
-    ui->tableView->resizeColumnsToContents();
 }
 
 void Calc12Window::setupToolbar()
