@@ -52,17 +52,6 @@ void Calculation::StokesVector::swap(int k, int n, double A[4][5])
     }
 }
 
-void printMatrix(double m[4][5]){
-    QDebug deb = qDebug().noquote();
-
-    for (int i = 0; i < 4; i++){
-        for (int j = 0; j < 5; j++){
-            deb << QString("%1").arg(m[i][j], 7, 'f', 4);
-        }
-        deb << '\n';
-    }
-    deb << "\n\n";
-}
 
 void Calculation::StokesVector::calculate(Intensity I1, Intensity I2, Intensity I3, Intensity I4)
 {
@@ -99,9 +88,6 @@ void Calculation::StokesVector::calculate(Intensity I1, Intensity I2, Intensity 
     A[2][4] = 2 * I3.i;
     A[3][4] = 2 * I4.i;
 
-    qDebug() << "init matrix";
-    printMatrix(A);
-
     for (int k = 0; k < 4; k++){
         if (abs(A[k][k]) < 1e-10){
             std::vector<double> list;
@@ -114,12 +100,9 @@ void Calculation::StokesVector::calculate(Intensity I1, Intensity I2, Intensity 
             auto idx = std::distance(list.begin(), m);
 
             if (idx != k){
-                qDebug() << "swap";
                 swap(k, idx, A);
             }
             else {
-                qDebug() << "There can be error in:  idx != k\n"
-                       << "idx =" << idx << " k=" << k << "\n";
                 return;
             }
         }
@@ -131,7 +114,6 @@ void Calculation::StokesVector::calculate(Intensity I1, Intensity I2, Intensity 
                 A[j][i] -= r * A[k][i];
             }
         }
-        printMatrix(A);
     }  // end for (int k = 0; k < 4; k++)
 
     for (int k = 3; k > -1; k--){
@@ -142,8 +124,6 @@ void Calculation::StokesVector::calculate(Intensity I1, Intensity I2, Intensity 
         }
 
         if (A[k][k] == 0){
-            qDebug() << "There can be error in : A[k][k] == 0\n"
-                   << "A[k][k]=" << A[k][k] << "\n";
             return;
         }
 

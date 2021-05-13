@@ -60,7 +60,7 @@ Reflection Task12::calcReflection(std::complex<double> nju, double phi,
 //        bool done = true;
         double cg = cos(gradient.Gamma);
         double a = Q*Q + U*U + cg*cg * (Q*Q + V*V + U*U);
-        Beta = abs(std::atan(V / a));
+        Beta = abs(std::atan(V / sqrt(a)));
 
         if (gradient.Gamma * V > 0){
             Beta = -Beta;
@@ -115,7 +115,6 @@ Reflection Task12::calcReflection(std::complex<double> nju, double phi,
         }
     }
 
-    std::complex<double> a {1, -tan(Alfa) * tan(Beta)};
     auto res = std::complex<double> {tan(Alfa), tan(Beta)} /
                std::complex<double> {1, -tan(Alfa) * tan(Beta)};
 
