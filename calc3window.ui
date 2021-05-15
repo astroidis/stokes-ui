@@ -221,12 +221,15 @@
      <widget class="QWidget" name="pageCalc">
       <layout class="QVBoxLayout" name="verticalLayout_9">
        <item>
-        <widget class="QTreeWidget" name="calcWidget">
-         <column>
-          <property name="text">
-           <string/>
-          </property>
-         </column>
+        <widget class="QTableView" name="statsTable">
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
+         <attribute name="horizontalHeaderDefaultSectionSize">
+          <number>80</number>
+         </attribute>
         </widget>
        </item>
       </layout>

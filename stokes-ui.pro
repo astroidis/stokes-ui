@@ -29,7 +29,7 @@ SOURCES += \
 HEADERS += \
     calc12window.h \
     calc3window.h \
-    calculation.h \
+    calculations/calculation.h \
     calculations/calculation.h \
     calculations/task12.h \
     calculations/task3.h \

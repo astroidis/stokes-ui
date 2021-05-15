@@ -24,18 +24,7 @@ private:
     QSqlTableModel *modelC1Calc;
     QSqlTableModel *modelC2Calc;
     QSqlTableModel *modelC3Calc;
-    QSqlQueryModel *modelC1Stat;
-    QSqlQueryModel *modelC2Stat;
-    QSqlQueryModel *modelC3Stat;
-    QTableView *tableC1Stat;
-    QTableView *tableC2Stat;
-    QTableView *tableC3Stat;
-    QTreeWidgetItem *c1Item;
-    QTreeWidgetItem *c2Item;
-    QTreeWidgetItem *c3Item;
-    QTreeWidgetItem *c1Child;
-    QTreeWidgetItem *c2Child;
-    QTreeWidgetItem *c3Child;
+    QSqlTableModel *modelStats;
 
     void calcC1();
     void calcC2();
@@ -48,6 +37,7 @@ private slots:
     void calcrbtnClicked();
 //    void srcrbtnClicked();
     void calcParamPbtnClicked();
+    void calcStats();
 };
 
 #endif // CALC3WINDOW_H

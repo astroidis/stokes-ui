@@ -94,6 +94,7 @@ namespace Task3
     double len2rect(double re, double im, double re1, double re2, double im1, double im2);
     double chi2P(double chi, int df);
     std::vector<Interval> getIntervals(int count, double min, double max);
+//    template<class T>
     std::map<std::string, double> calcStat(std::vector<ItemC> data);
     std::pair<int, Material>
         calcPlaneMaterial(std::vector<Sample> data, std::vector<Material> materials, PlaneTypes type);

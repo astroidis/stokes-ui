@@ -176,6 +176,7 @@ double stdev(vector<Task3::ItemC> data)
     return sqrt(s / data.size());
 }
 
+//template<class T>
 std::map<std::string, double> Task3::calcStat(vector<ItemC> data)
 {
     std::map<std::string, double> stat;
