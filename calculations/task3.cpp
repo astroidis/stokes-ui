@@ -173,22 +173,18 @@ double stdev(vector<Task3::ItemC> data)
         s += (x.value - m) * (x.value - m);
     }
 
-    return sqrt(s / data.size());
+    return sqrt(s / (data.size() - 1));
 }
 
-//template<class T>
-std::map<std::string, double> Task3::calcStat(vector<ItemC> data)
+std::map<std::string, double> Task3::calcStat(std::vector<ItemC> &data)
 {
     std::map<std::string, double> stat;
 
-    double countP = 0, midP, sdP;
+    qDebug() << "Calc total mean sko";
 
-    for(const auto &item : data){
-        countP += item.iscalc ? 1 : 0;
-    }
-
-    midP = mean(data);
-    sdP = stdev(data);
+    double countP = data.size(),
+            midP = mean(data),
+            sdP = stdev(data);
 
     stat["Всего"] = countP;
     stat["Среднее (по всем)"] = midP;
@@ -197,18 +193,19 @@ std::map<std::string, double> Task3::calcStat(vector<ItemC> data)
     vector<ItemC> data_n;
     data_n.reserve(data.size());
     for (const auto &x : data){
-        if (x.iscalc && (abs(x.value - midP) < sdP)){
+        if ((abs(x.value - midP) < sdP)){
             data_n.push_back(x);
         }
     }
 
+    qDebug() << "Calc mean min max disp";
     double mid = mean(data_n);
     double sd = stdev(data_n);
     auto compare = [](const ItemC &x1, const ItemC &x2)->bool{return x1.value < x2.value;};
     double min_v = (*std::min_element(data_n.begin(), data_n.end(), compare)).value;
     double max_v = (*std::max_element(data_n.begin(), data_n.end(), compare)).value;
 
-    for (auto &x : data){
+    for (auto &x : data_n){
         x.value_norm = (x.value - mid) / sd;
     }
 
@@ -218,13 +215,17 @@ std::map<std::string, double> Task3::calcStat(vector<ItemC> data)
     stat["Дисперсия"] = sd * sd;
     stat["СКО"] = sd;
 
+    qDebug() << "Calc min max normalized";
     int count_n = data_n.size();
-    double min_n = (*std::min_element(data_n.begin(), data_n.end(), compare)).value;
-    double max_n = (*std::max_element(data_n.begin(), data_n.end(), compare)).value;
+    auto compare_n = [](const ItemC &x1, const ItemC &x2)->bool{return x1.value_norm < x2.value_norm;};
+
+    double min_n = (*std::min_element(data_n.begin(), data_n.end(), compare_n)).value_norm;
+    double max_n = (*std::max_element(data_n.begin(), data_n.end(), compare_n)).value_norm;
 
     stat["Минимальное (норм)"] = min_n;
     stat["Максимальное (норм)"] = max_n;
 
+    qDebug() << "get intervals";
     auto intervals = getIntervals(Interval::INTERVAL_COUNT, min_n, max_n);
     double SumProb = 0;
     for (auto x : intervals){
@@ -232,7 +233,7 @@ std::map<std::string, double> Task3::calcStat(vector<ItemC> data)
     }
 
     for (const auto &x : data_n){
-        double value = std::round(x.value * 100) / 100;
+        double value = std::round(x.value_norm * 100) / 100;
         int index = -1;
 
         for (int j = 0; j < static_cast<int>(intervals.size()); j++){
@@ -269,22 +270,38 @@ std::map<std::string, double> Task3::calcStat(vector<ItemC> data)
         intervals[index].value_count++;
     }  // for (auto x : data_n)
 
-    const char *pi = "Pi[%d]", *n = "N[%d]";
-    char s[10];
-    int i = 0;
+    qDebug() << "calc Pi[] N[]";
+    double pis[5] = {0}, ns[5] = {0};
 
+    int i = 0;
     for (auto &x : intervals){
         x.npi = count_n * x.pi / SumProb;
         x.ni_npi = (x.value_count - x.npi) * (x.value_count - x.npi);
         x.ni_npi_norm = x.ni_npi / x.npi;
-        std::sprintf(s, pi, i);
-        stat[pi] = x.pi;
-        std::sprintf(s, n, i);
-        stat[n] = x.value_count;
-    }
+        pis[i] = x.pi;
+        ns[i] = x.value_count;
 
+        qDebug() << "i=" << i << "Pi=" << x.pi;
+
+        i++;
+    }
+    stat["P[0]"] = pis[0];
+    stat["P[1]"] = pis[1];
+    stat["P[2]"] = pis[2];
+    stat["P[3]"] = pis[3];
+    stat["P[4]"] = pis[4];
+
+    stat["N[0]"] = ns[0];
+    stat["N[1]"] = ns[1];
+    stat["N[2]"] = ns[2];
+    stat["N[3]"] = ns[3];
+    stat["N[4]"] = ns[4];
+
+    qDebug() << "PI" << stat["P[0]"] << stat["P[1]"] << stat["P[2]"] << stat["P[3]"] << "\n";
+
+    qDebug() << "Calc hi params";
     double SumHi = 0;
-    for (auto x : intervals)
+    for (const auto &x : intervals)
         SumHi += x.ni_npi_norm;
 
     double SumHiTeor = chi2P(0.05, Interval::INTERVAL_COUNT-3);
@@ -292,17 +309,18 @@ std::map<std::string, double> Task3::calcStat(vector<ItemC> data)
     stat["Хи-квадрат (эмп.)"] = SumHi;
     stat["Хи-квадрат (теор.)"] = SumHiTeor;
 
-    vector<ItemC> d, e;
-    d.reserve(data.size());
-    e.reserve(data.size());
-    for (const auto &x : data){
-        if (x.iscalc)
-            d.push_back(x);
-    }
+//    vector<ItemC> d, e;
+//    d.reserve(data.size());
+//    e.reserve(data.size());
+//    for (const auto &x : data){
+//        if (x.iscalc)
+//            d.push_back(x);
+//    }
 
-    double  midE = mean(d),
-            sdE = stdev(d),
-            Ek = (*std::max_element(d.begin(), d.end(),
+    qDebug() << "calc Ek Tk Ftk";
+    double  midE = mean(data),
+            sdE = stdev(data),
+            Ek = (*std::max_element(data.begin(), data.end(),
                                  [=](const auto &x1, const auto &x2){
                                  return abs(x1.value - midE) < abs(x2.value - midE);})).value,
             Tk = Ek / sdE,

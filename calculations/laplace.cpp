@@ -3,8 +3,8 @@
 
 double Calculation::simpson(std::function<double (double)> f, double a, double b, double eps)
 {
-    int n = 1 , s = 0;
-    double s0 = eps + 1;
+    int n = 1;
+    double  s = 0, s0 = eps + 1;
 
     while (std::abs(s - s0) > eps){
         n *= 2;

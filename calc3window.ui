@@ -195,26 +195,44 @@
    <item>
     <widget class="QStackedWidget" name="stackedWidget">
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="pageC1">
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
-        <widget class="QTableView" name="C1table"/>
+        <widget class="QTableView" name="C1table">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
      <widget class="QWidget" name="pageC2">
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QTableView" name="C2table"/>
+        <widget class="QTableView" name="C2table">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
      <widget class="QWidget" name="pageC3">
       <layout class="QVBoxLayout" name="verticalLayout_8">
        <item>
-        <widget class="QTableView" name="C3table"/>
+        <widget class="QTableView" name="C3table">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -224,7 +242,7 @@
         <widget class="QTableView" name="statsTable">
          <property name="font">
           <font>
-           <pointsize>11</pointsize>
+           <pointsize>10</pointsize>
           </font>
          </property>
          <attribute name="horizontalHeaderDefaultSectionSize">

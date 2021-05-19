@@ -113,7 +113,6 @@ void Calc3Window::calcrbtnClicked()
 
     ui->statsTable->setModel(modelStats);
     ui->statsTable->hideColumn(0);
-//    ui->statsTable->setColumnWidth(1, 150);
     ui->statsTable->resizeColumnsToContents();
     ui->stackedWidget->setCurrentWidget(ui->pageCalc);
 }
@@ -136,60 +135,68 @@ void Calc3Window::calcParamPbtnClicked()
 
 void Calc3Window::calcStats()
 {
+    QSqlTableModel model1 = QSqlTableModel(this, QSqlDatabase::database("stokes_db"));
+    model1.setTable("c1_parameter");
+    model1.select();
+    model1.sort(0, Qt::AscendingOrder);
+//    virtual void setSort(int column, Qt::SortOrder order);
+
+    QSqlTableModel model2 = QSqlTableModel(this, QSqlDatabase::database("stokes_db"));
+    model2.setTable("c2_parameter");
+    model2.select();
+
+    QSqlTableModel model3 = QSqlTableModel(this, QSqlDatabase::database("stokes_db"));
+    model3.setTable("c3_parameter");
+    model3.select();
+
     std::vector<Task3::ItemC> items1;
     std::vector<Task3::ItemC> items2;
     std::vector<Task3::ItemC> items3;
 
-    QSqlTableModel model1(this, QSqlDatabase::database("stokes_db"));
-    model1.setTable("c1_parameter");
-    model1.select();
-
-    QSqlTableModel model2(this, QSqlDatabase::database("stokes_db"));
-    model2.setTable("c2_parameter");
-    model2.select();
-
-    QSqlTableModel model3(this, QSqlDatabase::database("stokes_db"));
-    model3.setTable("c3_parameter");
-    model3.select();
-
-    items1.reserve(modelC1Calc->rowCount());
-    items2.reserve(modelC2Calc->rowCount());
-    items3.reserve(modelC3Calc->rowCount());
+    items1.reserve(model1.rowCount());
+    items2.reserve(model2.rowCount());
+    items3.reserve(model3.rowCount());
 
     qDebug() << "Calculating stat C1";
     for (int i = 0; i < model1.rowCount(); i++){
         QSqlRecord rec = model1.record(i);
         Task3::ItemC1 a(rec.value("dTheta").toDouble(), rec.value("Q").toDouble(),
                         rec.value("U").toDouble(), rec.value("V").toDouble());
+        a.value = rec.value("C1").toDouble();
         items1.push_back(a);
     }
+
+    auto stat1 = Task3::calcStat(items1);
 
     qDebug() << "Calculating stat C2";
     for (int i = 0; i < model2.rowCount(); i++){
         QSqlRecord rec = model2.record(i);
         Task3::ItemC2 a(rec.value("dGamma").toDouble(), rec.value("Q").toDouble(),
                         rec.value("U").toDouble(), rec.value("V").toDouble());
+        a.value = rec.value("C2").toDouble();
         items2.push_back(a);
     }
+
+    auto stat2 = Task3::calcStat(items2);
 
     qDebug() << "Calculating stat C3";
     for (int i = 0; i < model3.rowCount(); i++){
         QSqlRecord rec = model3.record(i);
         Task3::ItemC3 a(rec.value("dGamma").toDouble(), rec.value("Alfa").toDouble(),
                         rec.value("Beta").toDouble());
+        a.value = rec.value("C3").toDouble();
         items3.push_back(a);
     }
 
-    auto stat1 = Task3::calcStat(items1);
-    auto stat2 = Task3::calcStat(items2);
     auto stat3 = Task3::calcStat(items3);
 
     for (int i = 0; i < modelStats->rowCount(); i++){
         QSqlRecord rec = modelStats->record(i);
         std::string s = rec.value("obj_name").toString().toStdString();
-        rec.setValue("c1_value", stat1[s]);
-        rec.setValue("c2_value", stat2[s]);
-        rec.setValue("c3_value", stat3[s]);
+        rec.setValue("c1_value", QString::number(stat1[s], 'f', 5));
+        rec.setValue("c2_value", QString::number(stat2[s], 'f', 5));
+        rec.setValue("c3_value", QString::number(stat3[s], 'f', 5));
+        qDebug() << s.data() << stat1[s] << stat2[s] << stat3[s] << "\n";
         modelStats->setRecord(i, rec);
     }
 }

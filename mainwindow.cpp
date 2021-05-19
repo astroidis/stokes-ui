@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
     db = Database::instance();
     db->makeConnection();
     db->openDB();
+
     setupToolbar();
 
     connect(ui->actionLoadData12, &QAction::triggered, this, &MainWindow::loadTable);
@@ -145,7 +146,7 @@ void MainWindow::openAllExperiments()
     experiments = new Spreadsheet();
     experiments->displayTable("experiments");
     ui->mdiArea->addSubWindow(experiments);
-    experiments->show();
+    experiments->showMaximized();
 }
 
 void MainWindow::openExperimentSelector()
@@ -165,7 +166,7 @@ void MainWindow::openRefraction()
 {
     MaterialRefractionTable *table = new MaterialRefractionTable();
     ui->mdiArea->addSubWindow(table);
-    table->show();
+    table->showMaximized();
     table->displayTable();
     connect(this, &MainWindow::refractionExportFile, table, &MaterialRefractionTable::exportTable);
     connect(this, &MainWindow::refractionImportFile, table, &MaterialRefractionTable::importTable);
@@ -189,12 +190,12 @@ void MainWindow::makeCalc12()
 {
     Calc12Window *calc = new Calc12Window();
     ui->mdiArea->addSubWindow(calc);
-    calc->show();
+    calc->showMaximized();
 }
 
 void MainWindow::makeCalc3()
 {
     Calc3Window *calc = new Calc3Window();
     ui->mdiArea->addSubWindow(calc);
-    calc->show();
+    calc->showMaximized();
 }
