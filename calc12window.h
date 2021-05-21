@@ -29,6 +29,7 @@ private slots:
     void displayNatRays();
     void displayDispRays();
     void displayPolar();
+    void dropCalculation();
 
 private:
     Ui::Calc12Window *ui;

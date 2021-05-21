@@ -24,6 +24,7 @@ Calc12Window::Calc12Window(QWidget *parent) :
     connect(ui->intensityCheck, &QCheckBox::clicked, this, &Calc12Window::displayIntensity);
     connect(ui->natRaysCheck, &QCheckBox::clicked, this, &Calc12Window::displayNatRays);
     connect(ui->polarCheck, &QCheckBox::clicked, this, &Calc12Window::displayPolar);
+    connect(ui->dropCalcButton, &QPushButton::clicked, this, &Calc12Window::dropCalculation);
 }
 
 Calc12Window::~Calc12Window()
@@ -130,6 +131,9 @@ void Calc12Window::loadData()
 
 void Calc12Window::calculateOne()
 {
+    if (ui->tableView->selectionModel()->selectedRows().isEmpty()){
+        return;
+    }
     QModelIndex ind = ui->tableView->selectionModel()->selectedRows().back();
     int i = ind.row();
     QSqlRecord rec = model->record(i);
@@ -272,6 +276,28 @@ void Calc12Window::displayPolar()
         ui->tableView->hideColumn(model->fieldIndex("Beta1"));
         ui->tableView->hideColumn(model->fieldIndex("Re_Hi"));
         ui->tableView->hideColumn(model->fieldIndex("Im_Hi"));
+    }
+}
+
+void Calc12Window::dropCalculation()
+{
+    for (int i = 0; i < model->rowCount(); i++){
+        QSqlRecord rec = model->record(i);
+        rec.setValue("J", 0);
+        rec.setValue("Q", 0);
+        rec.setValue("U", 0);
+        rec.setValue("V", 0);
+        rec.setValue("P", 0);
+        rec.setValue("J0", 0);
+        rec.setValue("Q0", 0);
+        rec.setValue("U0", 0);
+        rec.setValue("V0", 0);
+        rec.setValue("P0", 0);
+        rec.setValue("Alfa1", 0);
+        rec.setValue("Beta1", 0);
+        rec.setValue("Re_Hi", 0);
+        rec.setValue("Im_Hi", 0);
+        model->setRecord(i, rec);
     }
 }
 
