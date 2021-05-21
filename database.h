@@ -14,9 +14,6 @@ public:
     void makeConnection();
     bool openDB();
     void closeDB();
-    bool addNewExperiment(QString name, QString comment);
-    bool updateExperiment(QString id, QString name, QString comment);
-    QSqlQuery getAllExperiments();
 
 private:
     static Database *pdb;

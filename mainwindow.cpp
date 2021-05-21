@@ -8,6 +8,7 @@
 #include <QProcess>
 #include <QFileDialog>
 
+#include "experimentswindow.h"
 #include "newexperimentdialog.h"
 #include "experimentselectordialog.h"
 #include "materialrefractiontable.h"
@@ -25,12 +26,11 @@ MainWindow::MainWindow(QWidget *parent)
 
     setupToolbar();
 
-    connect(ui->actionLoadData12, &QAction::triggered, this, &MainWindow::loadTable);
+    defaultTitle = this->windowTitle();
+
     connect(ui->actionParameters, &QAction::triggered, this, &MainWindow::createParameterTable);
     connect(ui->actionPlot, &QAction::triggered, this, &MainWindow::loadPlot);
-    connect(ui->actionNewExperiment, &QAction::triggered, this, &MainWindow::addNewExperiment);
     connect(ui->actionOpenExperiment, &QAction::triggered, this, &MainWindow::openAllExperiments);
-    connect(ui->actionSelect, &QAction::triggered, this, &MainWindow::openExperimentSelector);
     connect(ui->actionOpenRefraction_2, &QAction::triggered, this, &MainWindow::openRefraction);
     connect(ui->actionExportRefraction_2, &QAction::triggered, this, &MainWindow::exportRefraction);
     connect(ui->actionImportRefraction_2, &QAction::triggered, this, &MainWindow::importRefraction);
@@ -73,16 +73,6 @@ void MainWindow::setupToolbar()
     button_print->addAction(ui->actionPolarization);
     button_print->setText("Print");
     ui->toolBar->addWidget(button_print);
-}
-
-void MainWindow::loadTable()
-{
-    table = new Spreadsheet();
-    table->displayTable("datatest_02");
-    table->setMinimumHeight(400);
-    table->setMinimumWidth(400);
-    ui->mdiArea->addSubWindow(table);
-    table->show();
 }
 
 void MainWindow::createParameterTable()
@@ -135,31 +125,18 @@ void MainWindow::loadPlot()
     w->show();
 }
 
-void MainWindow::addNewExperiment()
-{
-    NewExperimentDialog dialog(this);
-    dialog.exec();
-}
-
 void MainWindow::openAllExperiments()
 {
-    experiments = new Spreadsheet();
-    experiments->displayTable("experiments");
-    ui->mdiArea->addSubWindow(experiments);
-    experiments->showMaximized();
-}
-
-void MainWindow::openExperimentSelector()
-{
-    ExperimentSelectorDialog *dialog = new ExperimentSelectorDialog();
-    connect(dialog, &ExperimentSelectorDialog::experimentSelected, this, &MainWindow::currentExperiment);
-    dialog->exec();
+    ExperimentsWindow *ew = new ExperimentsWindow();
+    ui->mdiArea->addSubWindow(ew);
+    ew->showMaximized();
+    connect(ew, &ExperimentsWindow::experimentSelected, this, &MainWindow::currentExperiment);
 }
 
 void MainWindow::currentExperiment(QString uuid, QString name)
 {
-    this->setWindowTitle(this->windowTitle() + " - " + name);
-    this->selectedExperiment = uuid;
+    this->setWindowTitle(defaultTitle + " - " + name);
+    this->selectedExperimentUUID = uuid;
 }
 
 void MainWindow::openRefraction()

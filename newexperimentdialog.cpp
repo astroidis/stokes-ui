@@ -1,6 +1,5 @@
 #include "newexperimentdialog.h"
 #include "ui_newexperimentdialog.h"
-#include "database.h"
 
 NewExperimentDialog::NewExperimentDialog(QWidget *parent) :
     QDialog(parent),
@@ -8,6 +7,7 @@ NewExperimentDialog::NewExperimentDialog(QWidget *parent) :
 {
     ui->setupUi(this);
     connect(ui->buttonSave, &QPushButton::clicked, this, &NewExperimentDialog::save);
+    connect(ui->buttonClose, &QPushButton::clicked, this, &NewExperimentDialog::close);
 }
 
 NewExperimentDialog::~NewExperimentDialog()
@@ -27,5 +27,8 @@ void NewExperimentDialog::save()
         comment.truncate(1024);
     }
 
-    Database::instance()->addNewExperiment(name, comment);
+    new_name = name;
+    new_comment = comment;
+
+    accept();
 }

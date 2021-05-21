@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "spreadsheet.h"
 #include "database.h"
 
 QT_BEGIN_NAMESPACE
@@ -24,25 +23,22 @@ signals:
 private:
     Ui::MainWindow *ui;
     Database *db;
-    Spreadsheet *table;
-    Spreadsheet *experiments;
-    QString selectedExperiment;
+    QString defaultTitle;
+    QString selectedExperimentUUID;
 
     void setupToolbar();
 
 private slots:
-    void loadTable();
     void createParameterTable();
     void loadPlot();
-    void addNewExperiment();
     void openAllExperiments();
-    void openExperimentSelector();
     void currentExperiment(QString uuid, QString name);
     void openRefraction();
     void exportRefraction();
     void importRefraction();
     void makeCalc12();
     void makeCalc3();
+
 };
 
 #endif // MAINWINDOW_H

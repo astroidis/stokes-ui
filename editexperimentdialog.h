@@ -2,7 +2,7 @@
 #define EDITEXPERIMENTDIALOG_H
 
 #include <QDialog>
-#include <QtSql>
+#include <QSqlRecord>
 
 namespace Ui {
 class EditExperimentDialog;
@@ -13,16 +13,16 @@ class EditExperimentDialog : public QDialog
     Q_OBJECT
 
 public:
+    QSqlRecord rec;
+    bool is_accepted;
+
     explicit EditExperimentDialog(QWidget *parent = nullptr);
     ~EditExperimentDialog();
 
     void initFieldData(QSqlRecord record);
-    QString name() const;
-    QString comment() const;
 
 private:
     Ui::EditExperimentDialog *ui;
-    QSqlRecord record;
 
 private slots:
     void save();

@@ -47,9 +47,7 @@
      <property name="title">
       <string>Эээээксперименты</string>
      </property>
-     <addaction name="actionNewExperiment"/>
      <addaction name="actionOpenExperiment"/>
-     <addaction name="actionSelect"/>
     </widget>
     <addaction name="menuExperiments"/>
     <addaction name="separator"/>

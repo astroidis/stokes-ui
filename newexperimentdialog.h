@@ -12,6 +12,9 @@ class NewExperimentDialog : public QDialog
     Q_OBJECT
 
 public:
+    QString new_name, new_comment;
+//    bool accepted;
+
     explicit NewExperimentDialog(QWidget *parent = nullptr);
     ~NewExperimentDialog();
 

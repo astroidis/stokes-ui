@@ -19,13 +19,12 @@ SOURCES += \
     calculations/task3.cpp \
     database.cpp \
     editexperimentdialog.cpp \
-    experimentselectordialog.cpp \
+    experimentswindow.cpp \
     main.cpp \
     mainwindow.cpp \
     materialrefractiontable.cpp \
     newexperimentdialog.cpp \
-    roweditingdelegate.cpp \
-    spreadsheet.cpp
+    roweditingdelegate.cpp
 
 HEADERS += \
     calc12window.h \
@@ -37,18 +36,17 @@ HEADERS += \
     calculations/task3.h \
     database.h \
     editexperimentdialog.h \
-    experimentselectordialog.h \
+    experimentswindow.h \
     mainwindow.h \
     materialrefractiontable.h \
     newexperimentdialog.h \
-    roweditingdelegate.h \
-    spreadsheet.h
+    roweditingdelegate.h
 
 FORMS += \
     calc12window.ui \
     calc3window.ui \
     editexperimentdialog.ui \
-    experimentselectordialog.ui \
+    experimentswindow.ui \
     mainwindow.ui \
     materialrefractiontable.ui \
     newexperimentdialog.ui
