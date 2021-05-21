@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     calc12window.cpp \
     calc3window.cpp \
+    calculations/chisqr.cpp \
     calculations/gradient.cpp \
     calculations/laplace.cpp \
     calculations/stokesvector.cpp \
@@ -31,6 +32,7 @@ HEADERS += \
     calc3window.h \
     calculations/calculation.h \
     calculations/calculation.h \
+    calculations/chisqr.h \
     calculations/task12.h \
     calculations/task3.h \
     database.h \

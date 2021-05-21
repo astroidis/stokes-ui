@@ -121,7 +121,6 @@ void Calc12Window::loadData()
             msg.close();
             break;
     }
-
 }
 
 void Calc12Window::calculateOne()
@@ -181,8 +180,6 @@ void Calc12Window::calculateOne()
 
 void Calc12Window::setupToolbar()
 {
-//    tb->setOrientation(Qt::Horizontal);
-
     QAction *saveAct = new QAction("Save", this);
     tb->addAction(saveAct);
     connect(saveAct, &QAction::triggered, this, &Calc12Window::saveData);

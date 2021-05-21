@@ -50,9 +50,9 @@ namespace Task3
     class ItemC3 : public ItemC
     {
     public:
-        double dGamma, Alfa, Beta;
+        double dGamma, Alpha, Beta;
 
-        ItemC3(double dgamma, double alfa, double beta);
+        ItemC3(double dgamma, double alpha, double beta);
         double calc() override;
     };
 

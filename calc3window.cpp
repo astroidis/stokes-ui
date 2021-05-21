@@ -1,12 +1,13 @@
 #include "calc3window.h"
 #include "ui_calc3window.h"
 
-#include <QPushButton>
-#include <QTreeWidgetItem>
 #include <QSqlRecord>
 #include <QDebug>
+#include <QMessageBox>
+
 #include <map>
 #include <string>
+
 #include "calculations/task3.h"
 
 Calc3Window::Calc3Window(QWidget *parent) :
@@ -18,6 +19,7 @@ Calc3Window::Calc3Window(QWidget *parent) :
     modelStats(new QSqlTableModel(this, QSqlDatabase::database("stokes_db")))
 {
     ui->setupUi(this);
+    setupToolbar();
 
     connect(ui->c1rbtn, &QRadioButton::toggled, this, &Calc3Window::c1rbtnClicked);
     connect(ui->c2rbtn, &QRadioButton::toggled, this, &Calc3Window::c2rbtnClicked);
@@ -32,14 +34,29 @@ Calc3Window::~Calc3Window()
     delete ui;
 }
 
+void Calc3Window::setupToolbar()
+{
+    tb = new QToolBar(this);
+    QAction *saveAct = new QAction("Save", this);
+    tb->addAction(saveAct);
+    connect(saveAct, &QAction::triggered, this, &Calc3Window::saveData);
+
+    QAction *loadAct = new QAction("Load", this);
+    tb->addAction(loadAct);
+    connect(loadAct, &QAction::triggered, this, &Calc3Window::loadData);
+
+    ui->toolLayout->addWidget(tb);
+    tb->show();
+}
+
 void Calc3Window::calcC1()
 {
     for (int i = 0; i < modelC1Calc->rowCount(); i++){
         QSqlRecord rec = modelC1Calc->record(i);
-        qDebug() << i;
         Task3::ItemC1 item(rec.value("dTheta").toDouble(), rec.value("Q").toDouble(),
                            rec.value("U").toDouble(), rec.value("V").toDouble());
-        rec.setValue("C1", item.calc());
+        rec.setValue("C1", QString::number(item.calc(), 'f', 4));
+        rec.setValue("is_calc", item.iscalc);
         modelC1Calc->setRecord(i, rec);
     }
 }
@@ -50,7 +67,8 @@ void Calc3Window::calcC2()
         QSqlRecord rec = modelC2Calc->record(i);
         Task3::ItemC2 item(rec.value("dGamma").toDouble(), rec.value("Q").toDouble(),
                            rec.value("U").toDouble(), rec.value("V").toDouble());
-        rec.setValue("C2", item.calc());
+        rec.setValue("C2", QString::number(item.calc(), 'f', 4));
+        rec.setValue("is_calc", item.iscalc);
         modelC2Calc->setRecord(i, rec);
     }
 }
@@ -59,9 +77,10 @@ void Calc3Window::calcC3()
 {
     for (int i = 0; i < modelC3Calc->rowCount(); i++){
         QSqlRecord rec = modelC3Calc->record(i);
-        Task3::ItemC3 item(rec.value("dGamma").toDouble(), rec.value("Alfa").toDouble(),
+        Task3::ItemC3 item(rec.value("dGamma").toDouble(), rec.value("Alpha").toDouble(),
                            rec.value("Beta").toDouble());
-        rec.setValue("C3", item.calc());
+        rec.setValue("C3", QString::number(item.calc(), 'f', 4));
+        rec.setValue("is_calc", item.iscalc);
         modelC3Calc->setRecord(i, rec);
     }
 }
@@ -69,51 +88,45 @@ void Calc3Window::calcC3()
 void Calc3Window::c1rbtnClicked()
 {
     modelC1Calc->setTable("c1_parameter");
-    modelC1Calc->select();
     modelC1Calc->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    modelC1Calc->setSort(modelC1Calc->fieldIndex("dTheta"), Qt::AscendingOrder);
+    modelC1Calc->select();
 
     ui->C1table->setModel(modelC1Calc);
-    ui->C1table->resizeColumnsToContents();
-    ui->C1table->resizeRowsToContents();
-
     ui->stackedWidget->setCurrentWidget(ui->pageC1);
 }
 
 void Calc3Window::c2rbtnClicked()
 {
     modelC2Calc->setTable("c2_parameter");
-    modelC2Calc->select();
     modelC2Calc->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    modelC2Calc->setSort(modelC2Calc->fieldIndex("dGamma"), Qt::AscendingOrder);
+    modelC2Calc->select();
 
     ui->C2table->setModel(modelC2Calc);
-    ui->C2table->resizeColumnsToContents();
-    ui->C2table->resizeRowsToContents();
-
     ui->stackedWidget->setCurrentWidget(ui->pageC2);
 }
 
 void Calc3Window::c3rbtnClicked()
 {
     modelC3Calc->setTable("c3_parameter");
-    modelC3Calc->select();
     modelC3Calc->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    modelC3Calc->setSort(modelC3Calc->fieldIndex("dGamma"), Qt::AscendingOrder);
+    modelC3Calc->select();
 
     ui->C3table->setModel(modelC3Calc);
-    ui->C3table->resizeColumnsToContents();
-    ui->C3table->resizeRowsToContents();
-
     ui->stackedWidget->setCurrentWidget(ui->pageC3);
 }
 
 void Calc3Window::calcrbtnClicked()
 {
     modelStats->setTable("statistics");
-    modelStats->select();
     modelStats->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    modelStats->select();
 
     ui->statsTable->setModel(modelStats);
     ui->statsTable->hideColumn(0);
-    ui->statsTable->resizeColumnsToContents();
+    ui->statsTable->resizeColumnToContents(modelStats->fieldIndex("obj_name"));
     ui->stackedWidget->setCurrentWidget(ui->pageCalc);
 }
 
@@ -138,8 +151,6 @@ void Calc3Window::calcStats()
     QSqlTableModel model1 = QSqlTableModel(this, QSqlDatabase::database("stokes_db"));
     model1.setTable("c1_parameter");
     model1.select();
-    model1.sort(0, Qt::AscendingOrder);
-//    virtual void setSort(int column, Qt::SortOrder order);
 
     QSqlTableModel model2 = QSqlTableModel(this, QSqlDatabase::database("stokes_db"));
     model2.setTable("c2_parameter");
@@ -163,6 +174,7 @@ void Calc3Window::calcStats()
         Task3::ItemC1 a(rec.value("dTheta").toDouble(), rec.value("Q").toDouble(),
                         rec.value("U").toDouble(), rec.value("V").toDouble());
         a.value = rec.value("C1").toDouble();
+        a.iscalc = rec.value("is_calc").toBool();
         items1.push_back(a);
     }
 
@@ -174,6 +186,7 @@ void Calc3Window::calcStats()
         Task3::ItemC2 a(rec.value("dGamma").toDouble(), rec.value("Q").toDouble(),
                         rec.value("U").toDouble(), rec.value("V").toDouble());
         a.value = rec.value("C2").toDouble();
+        a.iscalc = rec.value("is_calc").toBool();
         items2.push_back(a);
     }
 
@@ -185,6 +198,7 @@ void Calc3Window::calcStats()
         Task3::ItemC3 a(rec.value("dGamma").toDouble(), rec.value("Alfa").toDouble(),
                         rec.value("Beta").toDouble());
         a.value = rec.value("C3").toDouble();
+        a.iscalc = rec.value("is_calc").toBool();
         items3.push_back(a);
     }
 
@@ -193,10 +207,71 @@ void Calc3Window::calcStats()
     for (int i = 0; i < modelStats->rowCount(); i++){
         QSqlRecord rec = modelStats->record(i);
         std::string s = rec.value("obj_name").toString().toStdString();
-        rec.setValue("c1_value", QString::number(stat1[s], 'f', 5));
-        rec.setValue("c2_value", QString::number(stat2[s], 'f', 5));
-        rec.setValue("c3_value", QString::number(stat3[s], 'f', 5));
-        qDebug() << s.data() << stat1[s] << stat2[s] << stat3[s] << "\n";
+        rec.setValue("c1_value", QString::number(stat1[s], 'f', 4));
+        rec.setValue("c2_value", QString::number(stat2[s], 'f', 4));
+        rec.setValue("c3_value", QString::number(stat3[s], 'f', 4));
         modelStats->setRecord(i, rec);
     }
+}
+
+void Calc3Window::loadData()
+{
+    QSqlTableModel *model;
+    QTableView *table;
+    if (ui->c1rbtn->isChecked()){
+        model = modelC1Calc;
+        table = ui->C1table;
+    }
+    else if (ui->c2rbtn->isChecked()){
+        model = modelC2Calc;
+        table = ui->C2table;
+    }
+    else if (ui->c3rbtn->isChecked()){
+        model = modelC3Calc;
+        table = ui->C3table;
+    }
+    else if (ui->calcrbtn->isChecked()){
+        model = modelStats;
+        table = ui->statsTable;
+    }
+
+    QMessageBox msg(QMessageBox::Warning, "Warning", "Unsaved data will be lost");
+    msg.addButton("Continue", QMessageBox::AcceptRole);
+    msg.addButton("Cancel", QMessageBox::RejectRole);
+    switch (msg.exec()){
+        case QMessageBox::AcceptRole:
+            qDebug() << "Reloading data\n";
+            model->select();
+            table->reset();
+            break;
+
+        case QMessageBox::RejectRole:
+            qDebug() << "Loading canceled\n";
+            msg.close();
+            break;
+
+        default:
+            qDebug() << "Closing dialog\n";
+            msg.close();
+            break;
+    }
+}
+
+void Calc3Window::saveData()
+{
+    QSqlTableModel *model;
+    if (ui->c1rbtn->isChecked()){
+        model = modelC1Calc;
+    }
+    else if (ui->c2rbtn->isChecked()){
+        model = modelC2Calc;
+    }
+    else if (ui->c3rbtn->isChecked()){
+        model = modelC3Calc;
+    }
+    else if (ui->calcrbtn->isChecked()){
+        model = modelStats;
+    }
+
+    model->submitAll();
 }

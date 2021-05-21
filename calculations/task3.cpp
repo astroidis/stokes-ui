@@ -3,7 +3,9 @@
 #include <cmath>
 #include <algorithm>
 #include <QDebug>
+
 #include "calculation.h"
+#include "chisqr.h"
 
 using std::sqrt;
 using std::min;
@@ -122,17 +124,17 @@ double Task3::ItemC2::calc()
 }
 
 
-Task3::ItemC3::ItemC3(double dgamma, double alfa, double beta)
+Task3::ItemC3::ItemC3(double dgamma, double alpha, double beta)
 {
     dGamma = dgamma;
-    Alfa = alfa;
+    Alpha = alpha;
     Beta = beta;
 }
 
 double Task3::ItemC3::calc()
 {
     iscalc = true;
-    return Alfa * Beta;
+    return Alpha * Beta;
 }
 
 vector<Task3::Interval> Task3::getIntervals(int icount, double imin, double imax)
@@ -182,18 +184,27 @@ std::map<std::string, double> Task3::calcStat(std::vector<ItemC> &data)
 
     qDebug() << "Calc total mean sko";
 
-    double countP = data.size(),
-            midP = mean(data),
-            sdP = stdev(data);
+    vector<ItemC> data_c;
+    data_c.reserve(data.size());
+    for (auto &x : data){
+        if (x.iscalc){
+            data_c.push_back(x);
+        }
+    }
+
+    double countP = data_c.size(),
+            midP = mean(data_c),
+            sdP = stdev(data_c);
 
     stat["Всего"] = countP;
     stat["Среднее (по всем)"] = midP;
     stat["СКО (по всем)"] = sdP;
 
     vector<ItemC> data_n;
-    data_n.reserve(data.size());
-    for (const auto &x : data){
-        if ((abs(x.value - midP) < sdP)){
+    data_n.reserve(data_c.size());
+    for (auto &x : data_c){
+        x.iscalc = x.iscalc && (abs(x.value - midP) < sdP);
+        if (x.iscalc){
             data_n.push_back(x);
         }
     }
@@ -228,7 +239,7 @@ std::map<std::string, double> Task3::calcStat(std::vector<ItemC> &data)
     qDebug() << "get intervals";
     auto intervals = getIntervals(Interval::INTERVAL_COUNT, min_n, max_n);
     double SumProb = 0;
-    for (auto x : intervals){
+    for (const auto &x : intervals){
         SumProb += x.pi;
     }
 
@@ -268,7 +279,7 @@ std::map<std::string, double> Task3::calcStat(std::vector<ItemC> &data)
 
         index = std::clamp(index, 0, Interval::INTERVAL_COUNT-1);
         intervals[index].value_count++;
-    }  // for (auto x : data_n)
+    }  // for (const auto &x : data_n)
 
     qDebug() << "calc Pi[] N[]";
     double pis[5] = {0}, ns[5] = {0};
@@ -304,25 +315,25 @@ std::map<std::string, double> Task3::calcStat(std::vector<ItemC> &data)
     for (const auto &x : intervals)
         SumHi += x.ni_npi_norm;
 
-    double SumHiTeor = chi2P(0.05, Interval::INTERVAL_COUNT-3);
+    double SumHiTeor = chi_square_inverse(0.05, Interval::INTERVAL_COUNT-3);
 
     stat["Хи-квадрат (эмп.)"] = SumHi;
     stat["Хи-квадрат (теор.)"] = SumHiTeor;
 
-//    vector<ItemC> d, e;
-//    d.reserve(data.size());
-//    e.reserve(data.size());
-//    for (const auto &x : data){
-//        if (x.iscalc)
-//            d.push_back(x);
-//    }
-
     qDebug() << "calc Ek Tk Ftk";
-    double  midE = mean(data),
-            sdE = stdev(data),
-            Ek = (*std::max_element(data.begin(), data.end(),
+
+    data_c.clear();
+    data_c.reserve(data_n.size());
+    for (auto &x : data_n){
+        data_c.push_back(x);
+    }
+
+    double  midE = mean(data_c),
+            sdE = stdev(data_c),
+            d = (*std::max_element(data_c.begin(), data_c.end(),
                                  [=](const auto &x1, const auto &x2){
                                  return abs(x1.value - midE) < abs(x2.value - midE);})).value,
+            Ek = abs(d - midE),
             Tk = Ek / sdE,
             FTk = 2 * Calculation::laplace(Tk);
 
