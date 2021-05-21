@@ -25,8 +25,6 @@ private:
     QSqlTableModel *modelC3Calc;
     QSqlTableModel *modelStats;
     QToolBar *tb;
-//    QToolBar *toolC2;
-//    QToolBar *toolC3;
 
     void calcC1();
     void calcC2();

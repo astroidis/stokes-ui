@@ -19,6 +19,11 @@ Calc12Window::Calc12Window(QWidget *parent) :
 
     connect(ui->rCalcAllButton, &QPushButton::clicked, this, &Calc12Window::makeCalculations);
     connect(ui->rCalcButton, &QPushButton::clicked, this, &Calc12Window::calculateOne);
+    connect(ui->anglesCheck, &QCheckBox::clicked, this, &Calc12Window::displayTauPhi);
+    connect(ui->dispRaysCheck, &QCheckBox::clicked, this, &Calc12Window::displayDispRays);
+    connect(ui->intensityCheck, &QCheckBox::clicked, this, &Calc12Window::displayIntensity);
+    connect(ui->natRaysCheck, &QCheckBox::clicked, this, &Calc12Window::displayNatRays);
+    connect(ui->polarCheck, &QCheckBox::clicked, this, &Calc12Window::displayPolar);
 }
 
 Calc12Window::~Calc12Window()
@@ -176,6 +181,98 @@ void Calc12Window::calculateOne()
     rec.setValue("Re_Hi", QString::number(ref.re_hi, 'f', 4));
     rec.setValue("Im_Hi", QString::number(ref.im_hi, 'f', 4));
     model->setRecord(i, rec);
+}
+
+void Calc12Window::displayTauPhi()
+{
+    if (ui->anglesCheck->isChecked()){
+        ui->tableView->showColumn(model->fieldIndex("Tau1"));
+        ui->tableView->showColumn(model->fieldIndex("Tau2"));
+        ui->tableView->showColumn(model->fieldIndex("Tau3"));
+        ui->tableView->showColumn(model->fieldIndex("Tau4"));
+        ui->tableView->showColumn(model->fieldIndex("Phi1"));
+        ui->tableView->showColumn(model->fieldIndex("Phi2"));
+        ui->tableView->showColumn(model->fieldIndex("Phi3"));
+        ui->tableView->showColumn(model->fieldIndex("Phi4"));
+    }
+    else{
+        ui->tableView->hideColumn(model->fieldIndex("Tau1"));
+        ui->tableView->hideColumn(model->fieldIndex("Tau2"));
+        ui->tableView->hideColumn(model->fieldIndex("Tau3"));
+        ui->tableView->hideColumn(model->fieldIndex("Tau4"));
+        ui->tableView->hideColumn(model->fieldIndex("Phi1"));
+        ui->tableView->hideColumn(model->fieldIndex("Phi2"));
+        ui->tableView->hideColumn(model->fieldIndex("Phi3"));
+        ui->tableView->hideColumn(model->fieldIndex("Phi4"));
+    }
+}
+
+void Calc12Window::displayIntensity()
+{
+    if (ui->intensityCheck->isChecked()){
+        ui->tableView->showColumn(model->fieldIndex("I1"));
+        ui->tableView->showColumn(model->fieldIndex("I2"));
+        ui->tableView->showColumn(model->fieldIndex("I3"));
+        ui->tableView->showColumn(model->fieldIndex("I4"));
+    }
+    else{
+        ui->tableView->hideColumn(model->fieldIndex("I1"));
+        ui->tableView->hideColumn(model->fieldIndex("I2"));
+        ui->tableView->hideColumn(model->fieldIndex("I3"));
+        ui->tableView->hideColumn(model->fieldIndex("I4"));
+    }
+}
+
+void Calc12Window::displayNatRays()
+{
+    if (ui->natRaysCheck->isChecked()){
+        ui->tableView->showColumn(model->fieldIndex("J0"));
+        ui->tableView->showColumn(model->fieldIndex("Q0"));
+        ui->tableView->showColumn(model->fieldIndex("U0"));
+        ui->tableView->showColumn(model->fieldIndex("V0"));
+        ui->tableView->showColumn(model->fieldIndex("P0"));
+    }
+    else{
+        ui->tableView->hideColumn(model->fieldIndex("J0"));
+        ui->tableView->hideColumn(model->fieldIndex("Q0"));
+        ui->tableView->hideColumn(model->fieldIndex("U0"));
+        ui->tableView->hideColumn(model->fieldIndex("V0"));
+        ui->tableView->hideColumn(model->fieldIndex("P0"));
+    }
+}
+
+void Calc12Window::displayDispRays()
+{
+    if (ui->dispRaysCheck->isChecked()){
+        ui->tableView->showColumn(model->fieldIndex("J"));
+        ui->tableView->showColumn(model->fieldIndex("Q"));
+        ui->tableView->showColumn(model->fieldIndex("U"));
+        ui->tableView->showColumn(model->fieldIndex("V"));
+        ui->tableView->showColumn(model->fieldIndex("P"));
+    }
+    else{
+        ui->tableView->hideColumn(model->fieldIndex("J"));
+        ui->tableView->hideColumn(model->fieldIndex("Q"));
+        ui->tableView->hideColumn(model->fieldIndex("U"));
+        ui->tableView->hideColumn(model->fieldIndex("V"));
+        ui->tableView->hideColumn(model->fieldIndex("P"));
+    }
+}
+
+void Calc12Window::displayPolar()
+{
+    if (ui->polarCheck->isChecked()){
+        ui->tableView->showColumn(model->fieldIndex("Alfa1"));
+        ui->tableView->showColumn(model->fieldIndex("Beta1"));
+        ui->tableView->showColumn(model->fieldIndex("Re_Hi"));
+        ui->tableView->showColumn(model->fieldIndex("Im_Hi"));
+    }
+    else {
+        ui->tableView->hideColumn(model->fieldIndex("Alfa1"));
+        ui->tableView->hideColumn(model->fieldIndex("Beta1"));
+        ui->tableView->hideColumn(model->fieldIndex("Re_Hi"));
+        ui->tableView->hideColumn(model->fieldIndex("Im_Hi"));
+    }
 }
 
 void Calc12Window::setupToolbar()

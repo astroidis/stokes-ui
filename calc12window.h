@@ -19,11 +19,16 @@ public:
 
     void openTable();
 
-public slots:
+private slots:
     void makeCalculations();
     void saveData();
     void loadData();
     void calculateOne();
+    void displayTauPhi();
+    void displayIntensity();
+    void displayNatRays();
+    void displayDispRays();
+    void displayPolar();
 
 private:
     Ui::Calc12Window *ui;
