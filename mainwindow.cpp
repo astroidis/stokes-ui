@@ -10,10 +10,11 @@
 
 #include "experimentswindow.h"
 #include "newexperimentdialog.h"
-#include "experimentselectordialog.h"
 #include "materialrefractiontable.h"
 #include "calc12window.h"
 #include "calc3window.h"
+#include "plotwidget.h"
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -112,17 +113,10 @@ void MainWindow::createParameterTable()
 
 void MainWindow::loadPlot()
 {
-    QWidget *w = new QWidget();
-    QHBoxLayout *l = new QHBoxLayout();
-    w->setLayout(l);
-
-    QImage img = QImage("C:\\Users\\User\\Documents\\Code\\Cpp\\TestPyEmbed\\ebosh.jpg");
-    QLabel *lbl = new QLabel();
-    lbl->setPixmap(QPixmap::fromImage(img.scaled(600, 400, Qt::KeepAspectRatio)));
-
-    w->layout()->addWidget(lbl);
-    ui->mdiArea->addSubWindow(w);
-    w->show();
+    PlotWidget *pw = new PlotWidget();
+    QWidget *win = QWidget::createWindowContainer(pw->plot("J"));
+    ui->mdiArea->addSubWindow(win);
+    win->showMaximized();
 }
 
 void MainWindow::openAllExperiments()
