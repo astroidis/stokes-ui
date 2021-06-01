@@ -1,67 +1,116 @@
 #include "plotwidget.h"
+#include "ui_plotwidget.h"
 
 #include <QSqlQueryModel>
 #include <QSqlRecord>
 #include <QDebug>
 #include <QSqlError>
+#include <QSqlQuery>
 
 using namespace QtDataVisualization;
 
-
-PlotWidget::PlotWidget(QWidget *parent) : QWidget(parent)
-    , surface(new Q3DSurface())
+PlotWidget::PlotWidget(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::PlotWidget)
 {
+    ui->setupUi(this);
+    setupButtonGroup();
+    plot("J");
 }
 
-Q3DSurface *PlotWidget::plot(QString argument)
+PlotWidget::~PlotWidget()
 {
-    QSqlQueryModel model = QSqlQueryModel();
-    model.setQuery("select \"Alfa\", \"Beta\", \"J\" from calculation_12 order by \"J\" asc, \"Alfa\" asc",
-                   QSqlDatabase::database("stokes_db"));
-    qDebug() << model.lastError();
+    delete ui;
+}
 
+void PlotWidget::plot(QString argument)
+{
     QSurfaceDataArray *data = new QSurfaceDataArray();
-//    QSurfaceDataRow *dataRow1 = new QSurfaceDataRow();
-//    QSurfaceDataRow *dataRow2 = new QSurfaceDataRow();
-//    *dataRow1 << QVector3D(0, 0, 0) << QVector3D(1, 0, 0);
-//    *dataRow2 << QVector3D(0, 0, 1) << QVector3D(0, 1, 1);
-//    *data << dataRow1 << dataRow2;
-    for (int i = 0; i < model.rowCount()-3; i+=3){
+
+    QSqlQueryModel model = QSqlQueryModel();
+    model.setQuery("select distinct \"Alfa\" from calculation_12 order by \"Alfa\" asc",
+                   QSqlDatabase::database("stokes_db"));
+
+    for (int i = 0; i < model.rowCount(); i++){
         QSurfaceDataRow *row = new QSurfaceDataRow();
 
         QSqlRecord rec = model.record(i);
-        double arg = rec.value(argument).toDouble();
         double alfa = rec.value("Alfa").toDouble();
-        double beta = rec.value("Beta").toDouble();
-        QSurfaceDataItem item1 = QSurfaceDataItem(QVector3D(alfa, beta, arg));
 
-        rec = model.record(i+1);
-        arg = rec.value(argument).toDouble();
-        alfa = rec.value("Alfa").toDouble();
-        beta = rec.value("Beta").toDouble();
-        QSurfaceDataItem item2 = QSurfaceDataItem(QVector3D(alfa, beta, arg));
+        QSqlQuery q = QSqlQuery(QSqlDatabase::database("stokes_db"));
+        q.prepare(QString("select \"Beta\", \"%1\" from calculation_12 where \"Alfa\" = :val order by \"Beta\" asc;").arg(argument));
+        q.bindValue(":val", alfa);
+        q.exec();
 
-        rec = model.record(i+3);
-        arg = rec.value(argument).toDouble();
-        alfa = rec.value("Alfa").toDouble();
-        beta = rec.value("Beta").toDouble();
-        QSurfaceDataItem item3 = QSurfaceDataItem(QVector3D(alfa, beta, arg));
+        while(q.next()){
+            double beta = q.value("Beta").toDouble();
+            double arg = q.value(argument).toDouble();
+            QSurfaceDataItem item1 = QSurfaceDataItem();
+            item1.setX(beta);
+            item1.setY(arg);
+            item1.setZ(alfa);
 
-        row->append(item1);
-        row->append(item2);
-        row->append(item3);
+            row->append(item1);
+        }
+
         data->append(row);
     }
-//    data->append(row);
-//    }
 
     QSurface3DSeries *series = new QSurface3DSeries();
     series->dataProxy()->resetArray(data);
-    surface->addSeries(series);
-//    surface->axisX()->setTitle("Alfa");
-//    surface->axisY()->setTitle("Beta");
-//    surface->axisZ()->setTitle(argument);
-//    series->setDrawMode(QSurface3DSeries::DrawSurface);
 
-    return surface;
+    QLinearGradient gr;
+    gr.setColorAt(0.0, Qt::black);
+    gr.setColorAt(0.33, Qt::blue);
+    gr.setColorAt(0.67, Qt::red);
+    gr.setColorAt(1.0, Qt::yellow);
+
+    series->setBaseGradient(gr);
+    series->setColorStyle(Q3DTheme::ColorStyleRangeGradient);
+    series->setFlatShadingEnabled(false);
+
+    Q3DSurface *surface = new Q3DSurface();
+    surface->addSeries(series);
+
+    surface->axisX()->setTitle("Beta");
+    surface->axisX()->setTitleVisible(true);
+
+    surface->axisY()->setTitle(argument);
+    surface->axisY()->setTitleVisible(true);
+
+    surface->axisZ()->setTitle("Alfa");
+    surface->axisZ()->setTitleVisible(true);
+    surface->axisZ()->setReversed(true);
+
+    surface->setShadowQuality(Q3DSurface::ShadowQualityNone);
+
+    container = QWidget::createWindowContainer(surface);
+    ui->horizontalLayout->addWidget(container);
+    container->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    container->show();
+}
+
+void PlotWidget::setupButtonGroup()
+{
+    group = new QButtonGroup();
+    group->addButton(ui->rbJ);
+    group->addButton(ui->rbJ0);
+    group->addButton(ui->rbP);
+    group->addButton(ui->rbP0);
+    group->addButton(ui->rbQ);
+    group->addButton(ui->rbQ0);
+    group->addButton(ui->rbU);
+    group->addButton(ui->rbU0);
+    group->addButton(ui->rbV);
+    group->addButton(ui->rbV0);
+
+    connect(group, SIGNAL(buttonClicked(QAbstractButton*)), this, SLOT(replot(QAbstractButton *)));
+}
+
+void PlotWidget::replot(QAbstractButton *button)
+{
+    delete container;
+
+    QString parameter = button->text();
+    plot(parameter);
 }

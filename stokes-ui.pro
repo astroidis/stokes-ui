@@ -51,7 +51,8 @@ FORMS += \
     experimentswindow.ui \
     mainwindow.ui \
     materialrefractiontable.ui \
-    newexperimentdialog.ui
+    newexperimentdialog.ui \
+    plotwidget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

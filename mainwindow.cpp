@@ -4,9 +4,8 @@
 #include <QToolButton>
 #include <QTableWidget>
 #include <QLabel>
-#include <QImage>
-#include <QProcess>
 #include <QFileDialog>
+#include <QPushButton>
 
 #include "experimentswindow.h"
 #include "newexperimentdialog.h"
@@ -114,9 +113,8 @@ void MainWindow::createParameterTable()
 void MainWindow::loadPlot()
 {
     PlotWidget *pw = new PlotWidget();
-    QWidget *win = QWidget::createWindowContainer(pw->plot("J"));
-    ui->mdiArea->addSubWindow(win);
-    win->showMaximized();
+    ui->mdiArea->addSubWindow(pw);
+    pw->showMaximized();
 }
 
 void MainWindow::openAllExperiments()

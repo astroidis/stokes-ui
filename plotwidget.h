@@ -2,21 +2,32 @@
 #define PLOTWIDGET_H
 
 #include <QWidget>
+#include <QButtonGroup>
+#include <QAbstractButton>
 #include <QtDataVisualization/Q3DSurface>
+
+namespace Ui {
+class PlotWidget;
+}
 
 class PlotWidget : public QWidget
 {
     Q_OBJECT
+
 public:
-//    QtDataVisualization::Q3DSurface *surface;
-
     explicit PlotWidget(QWidget *parent = nullptr);
-
-    QtDataVisualization::Q3DSurface *plot(QString argument);
+    ~PlotWidget();
 
 private:
-    QtDataVisualization::Q3DSurface *surface;
+    Ui::PlotWidget *ui;
+    QWidget *container;
+    QButtonGroup *group;
 
+    void plot(QString argument);
+    void setupButtonGroup();
+
+private slots:
+    void replot(QAbstractButton *button);
 };
 
 #endif // PLOTWIDGET_H
