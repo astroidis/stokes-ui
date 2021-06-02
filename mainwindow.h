@@ -26,10 +26,8 @@ private:
     QString defaultTitle;
     QString selectedExperimentUUID;
 
-    void setupToolbar();
-
 private slots:
-    void createParameterTable();
+    void openConstants();
     void loadPlot();
     void openAllExperiments();
     void setMenuEnabled();

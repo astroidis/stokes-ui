@@ -17,6 +17,7 @@ SOURCES += \
     calculations/stokesvector.cpp \
     calculations/task12.cpp \
     calculations/task3.cpp \
+    constantswindow.cpp \
     database.cpp \
     editexperimentdialog.cpp \
     experimentswindow.cpp \
@@ -35,6 +36,7 @@ HEADERS += \
     calculations/chisqr.h \
     calculations/task12.h \
     calculations/task3.h \
+    constantswindow.h \
     database.h \
     editexperimentdialog.h \
     experimentswindow.h \
@@ -47,6 +49,7 @@ HEADERS += \
 FORMS += \
     calc12window.ui \
     calc3window.ui \
+    constantswindow.ui \
     editexperimentdialog.ui \
     experimentswindow.ui \
     mainwindow.ui \
