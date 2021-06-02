@@ -61,6 +61,7 @@ void ExperimentsWindow::setupTable()
     ui->exprimentsTable->setColumnWidth(modelExp->fieldIndex("obj_comment"), 400);
     ui->exprimentsTable->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->exprimentsTable->setItemDelegate(new RowEditingDelegate());
+    ui->exprimentsTable->resizeRowsToContents();
 }
 
 void ExperimentsWindow::openAddDialog()
