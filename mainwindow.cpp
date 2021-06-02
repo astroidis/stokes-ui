@@ -30,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->actionParameters, &QAction::triggered, this, &MainWindow::createParameterTable);
     connect(ui->actionPlot, &QAction::triggered, this, &MainWindow::loadPlot);
-    connect(ui->actionOpenExperiment, &QAction::triggered, this, &MainWindow::openAllExperiments);
+    connect(ui->actionExperiments, &QAction::triggered, this, &MainWindow::openAllExperiments);
     connect(ui->actionOpenRefraction_2, &QAction::triggered, this, &MainWindow::openRefraction);
     connect(ui->actionExportRefraction_2, &QAction::triggered, this, &MainWindow::exportRefraction);
     connect(ui->actionImportRefraction_2, &QAction::triggered, this, &MainWindow::importRefraction);
@@ -112,7 +112,7 @@ void MainWindow::createParameterTable()
 
 void MainWindow::loadPlot()
 {
-    PlotWidget *pw = new PlotWidget();
+    PlotWidget *pw = new PlotWidget(selectedExperimentUUID);
     ui->mdiArea->addSubWindow(pw);
     pw->showMaximized();
 }
@@ -123,6 +123,14 @@ void MainWindow::openAllExperiments()
     ui->mdiArea->addSubWindow(ew);
     ew->showMaximized();
     connect(ew, &ExperimentsWindow::experimentSelected, this, &MainWindow::currentExperiment);
+    connect(ew, SIGNAL(experimentSelected(QString, QString)), this, SLOT(setMenuEnabled()));
+}
+
+void MainWindow::setMenuEnabled()
+{
+    ui->menuCalculate->setEnabled(true);
+    ui->menuPrint->setEnabled(true);
+    ui->menuTesting->setEnabled(true);
 }
 
 void MainWindow::currentExperiment(QString uuid, QString name)
@@ -157,14 +165,14 @@ void MainWindow::importRefraction()
 
 void MainWindow::makeCalc12()
 {
-    Calc12Window *calc = new Calc12Window();
+    Calc12Window *calc = new Calc12Window(selectedExperimentUUID);
     ui->mdiArea->addSubWindow(calc);
     calc->showMaximized();
 }
 
 void MainWindow::makeCalc3()
 {
-    Calc3Window *calc = new Calc3Window();
+    Calc3Window *calc = new Calc3Window(selectedExperimentUUID);
     ui->mdiArea->addSubWindow(calc);
     calc->showMaximized();
 }

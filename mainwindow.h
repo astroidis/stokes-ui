@@ -32,6 +32,7 @@ private slots:
     void createParameterTable();
     void loadPlot();
     void openAllExperiments();
+    void setMenuEnabled();
     void currentExperiment(QString uuid, QString name);
     void openRefraction();
     void exportRefraction();

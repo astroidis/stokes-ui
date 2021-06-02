@@ -10,13 +10,14 @@
 
 #include "calculations/task3.h"
 
-Calc3Window::Calc3Window(QWidget *parent) :
+Calc3Window::Calc3Window(QString experiment_id, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Calc3Window),
     modelC1Calc(new QSqlTableModel(this, QSqlDatabase::database("stokes_db"))),
     modelC2Calc(new QSqlTableModel(this, QSqlDatabase::database("stokes_db"))),
     modelC3Calc(new QSqlTableModel(this, QSqlDatabase::database("stokes_db"))),
-    modelStats(new QSqlTableModel(this, QSqlDatabase::database("stokes_db")))
+    modelStats(new QSqlTableModel(this, QSqlDatabase::database("stokes_db"))),
+    experiment(experiment_id)
 {
     ui->setupUi(this);
     setupToolbar();
@@ -90,9 +91,11 @@ void Calc3Window::c1rbtnClicked()
     modelC1Calc->setTable("c1_parameter");
     modelC1Calc->setEditStrategy(QSqlTableModel::OnManualSubmit);
     modelC1Calc->setSort(modelC1Calc->fieldIndex("dTheta"), Qt::AscendingOrder);
+    modelC1Calc->setFilter(QString("experiment_id = '%1'").arg(experiment));
     modelC1Calc->select();
 
     ui->C1table->setModel(modelC1Calc);
+    ui->C1table->hideColumn(modelC1Calc->fieldIndex("experiment_id"));
     ui->stackedWidget->setCurrentWidget(ui->pageC1);
 }
 
@@ -101,9 +104,11 @@ void Calc3Window::c2rbtnClicked()
     modelC2Calc->setTable("c2_parameter");
     modelC2Calc->setEditStrategy(QSqlTableModel::OnManualSubmit);
     modelC2Calc->setSort(modelC2Calc->fieldIndex("dGamma"), Qt::AscendingOrder);
+    modelC2Calc->setFilter(QString("experiment_id = '%1'").arg(experiment));
     modelC2Calc->select();
 
     ui->C2table->setModel(modelC2Calc);
+    ui->C2table->hideColumn(modelC2Calc->fieldIndex("experiment_id"));
     ui->stackedWidget->setCurrentWidget(ui->pageC2);
 }
 
@@ -112,9 +117,11 @@ void Calc3Window::c3rbtnClicked()
     modelC3Calc->setTable("c3_parameter");
     modelC3Calc->setEditStrategy(QSqlTableModel::OnManualSubmit);
     modelC3Calc->setSort(modelC3Calc->fieldIndex("dGamma"), Qt::AscendingOrder);
+    modelC3Calc->setFilter(QString("experiment_id = '%1'").arg(experiment));
     modelC3Calc->select();
 
     ui->C3table->setModel(modelC3Calc);
+    ui->C3table->hideColumn(modelC3Calc->fieldIndex("experiment_id"));
     ui->stackedWidget->setCurrentWidget(ui->pageC3);
 }
 
@@ -122,10 +129,12 @@ void Calc3Window::calcrbtnClicked()
 {
     modelStats->setTable("statistics");
     modelStats->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    modelStats->setFilter(QString("experiment_id = '%1'").arg(experiment));
     modelStats->select();
 
     ui->statsTable->setModel(modelStats);
     ui->statsTable->hideColumn(0);
+    ui->statsTable->hideColumn(modelStats->fieldIndex("experiment_id"));
     ui->statsTable->resizeColumnToContents(modelStats->fieldIndex("obj_name"));
     ui->stackedWidget->setCurrentWidget(ui->pageCalc);
 }
@@ -150,14 +159,17 @@ void Calc3Window::calcStats()
 {
     QSqlTableModel model1 = QSqlTableModel(this, QSqlDatabase::database("stokes_db"));
     model1.setTable("c1_parameter");
+    model1.setFilter(QString("experiment_id = '%1'").arg(experiment));
     model1.select();
 
     QSqlTableModel model2 = QSqlTableModel(this, QSqlDatabase::database("stokes_db"));
     model2.setTable("c2_parameter");
+    model2.setFilter(QString("experiment_id = '%1'").arg(experiment));
     model2.select();
 
     QSqlTableModel model3 = QSqlTableModel(this, QSqlDatabase::database("stokes_db"));
     model3.setTable("c3_parameter");
+    model3.setFilter(QString("experiment_id = '%1'").arg(experiment));
     model3.select();
 
     std::vector<Task3::ItemC> items1;

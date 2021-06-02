@@ -8,10 +8,11 @@
 #include "calculations/task12.h"
 
 
-Calc12Window::Calc12Window(QWidget *parent) :
+Calc12Window::Calc12Window(QString experiment_id, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Calc12Window),
-    tb(new QToolBar(this))
+    tb(new QToolBar(this)),
+    experiment(experiment_id)
 {
     ui->setupUi(this);
     openTable();
@@ -37,12 +38,14 @@ void Calc12Window::openTable()
     model = new QSqlTableModel(this, QSqlDatabase::database("stokes_db"));
     model->setEditStrategy(QSqlTableModel::OnManualSubmit);
     model->setTable("calculation_12");
+    model->setFilter(QString("experiment_id = '%1'").arg(experiment));
     model->select();
 
     ui->tableView->setModel(model);
     ui->tableView->resizeRowsToContents();
     ui->tableView->setSelectionBehavior(QAbstractItemView::SelectRows);
     ui->tableView->hideColumn(0);
+    ui->tableView->hideColumn(model->fieldIndex("experiment_id"));
 }
 
 void Calc12Window::makeCalculations()

@@ -15,13 +15,14 @@ class PlotWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit PlotWidget(QWidget *parent = nullptr);
+    explicit PlotWidget(QString experiment_id, QWidget *parent = nullptr);
     ~PlotWidget();
 
 private:
     Ui::PlotWidget *ui;
     QWidget *container;
     QButtonGroup *group;
+    QString experiment;
 
     void plot(QString argument);
     void setupButtonGroup();

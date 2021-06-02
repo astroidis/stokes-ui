@@ -14,7 +14,7 @@ class Calc12Window : public QWidget
     Q_OBJECT
 
 public:
-    explicit Calc12Window(QWidget *parent = nullptr);
+    explicit Calc12Window(QString experiment_id, QWidget *parent = nullptr);
     ~Calc12Window();
 
     void openTable();
@@ -35,6 +35,7 @@ private:
     Ui::Calc12Window *ui;
     QSqlTableModel *model;
     QToolBar *tb;
+    QString experiment;
 
     void setupToolbar();
 };

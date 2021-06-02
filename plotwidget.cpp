@@ -9,9 +9,10 @@
 
 using namespace QtDataVisualization;
 
-PlotWidget::PlotWidget(QWidget *parent) :
+PlotWidget::PlotWidget(QString experiment_id, QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::PlotWidget)
+    ui(new Ui::PlotWidget),
+    experiment(experiment_id)
 {
     ui->setupUi(this);
     setupButtonGroup();
@@ -28,7 +29,7 @@ void PlotWidget::plot(QString argument)
     QSurfaceDataArray *data = new QSurfaceDataArray();
 
     QSqlQueryModel model = QSqlQueryModel();
-    model.setQuery("select distinct \"Alfa\" from calculation_12 order by \"Alfa\" asc",
+    model.setQuery(QString("select distinct \"Alfa\" from calculation_12 where \"experiment_id\" = '%1' order by \"Alfa\" asc").arg(experiment),
                    QSqlDatabase::database("stokes_db"));
 
     for (int i = 0; i < model.rowCount(); i++){
@@ -37,14 +38,20 @@ void PlotWidget::plot(QString argument)
         QSqlRecord rec = model.record(i);
         double alfa = rec.value("Alfa").toDouble();
 
-        QSqlQuery q = QSqlQuery(QSqlDatabase::database("stokes_db"));
-        q.prepare(QString("select \"Beta\", \"%1\" from calculation_12 where \"Alfa\" = :val order by \"Beta\" asc;").arg(argument));
-        q.bindValue(":val", alfa);
-        q.exec();
+        QSqlQuery q = QSqlQuery(QString("select \"Beta\", \"%1\" from calculation_12 "
+                                        "where \"Alfa\" = %2 and \"experiment_id\" = '%3' "
+                                        "order by \"Beta\" asc;")
+                                        .arg(argument)
+                                        .arg(alfa)
+                                        .arg(experiment),
+                                QSqlDatabase::database("stokes_db"));
 
         while(q.next()){
             double beta = q.value("Beta").toDouble();
             double arg = q.value(argument).toDouble();
+
+            qDebug() << alfa << beta << arg;
+
             QSurfaceDataItem item1 = QSurfaceDataItem();
             item1.setX(beta);
             item1.setY(arg);

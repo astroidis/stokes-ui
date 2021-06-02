@@ -15,7 +15,7 @@ class Calc3Window : public QWidget
     Q_OBJECT
 
 public:
-    explicit Calc3Window(QWidget *parent = nullptr);
+    explicit Calc3Window(QString experiment_id, QWidget *parent = nullptr);
     ~Calc3Window();
 
 private:
@@ -25,6 +25,7 @@ private:
     QSqlTableModel *modelC3Calc;
     QSqlTableModel *modelStats;
     QToolBar *tb;
+    QString experiment;
 
     void calcC1();
     void calcC2();

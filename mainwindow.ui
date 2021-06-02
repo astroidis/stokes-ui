@@ -43,19 +43,17 @@
     <property name="title">
      <string>Файл</string>
     </property>
-    <widget class="QMenu" name="menuExperiments">
-     <property name="title">
-      <string>Эээээксперименты</string>
-     </property>
-     <addaction name="actionOpenExperiment"/>
-    </widget>
-    <addaction name="menuExperiments"/>
     <addaction name="separator"/>
+    <addaction name="actionExperiments"/>
     <addaction name="actionExit"/>
-    <addaction name="actionConnect"/>
-    <addaction name="actionDisconnect"/>
    </widget>
    <widget class="QMenu" name="menuCalculate">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="tearOffEnabled">
+     <bool>false</bool>
+    </property>
     <property name="title">
      <string>Расчет</string>
     </property>
@@ -80,6 +78,9 @@
     <addaction name="actionPlot"/>
    </widget>
    <widget class="QMenu" name="menuPrint">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="title">
      <string>Печать</string>
     </property>
@@ -90,12 +91,18 @@
     <addaction name="actionPolarization"/>
    </widget>
    <widget class="QMenu" name="menuTesting">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="title">
      <string>Тестирование</string>
     </property>
     <addaction name="actionGradient"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
     <property name="title">
      <string>Справка</string>
     </property>
@@ -134,6 +141,9 @@
    </property>
   </action>
   <action name="actionParameters">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Параметры</string>
    </property>
@@ -236,6 +246,11 @@
   <action name="actionImportRefraction_2">
    <property name="text">
     <string>Import</string>
+   </property>
+  </action>
+  <action name="actionExperiments">
+   <property name="text">
+    <string>Ээээксперименты</string>
    </property>
   </action>
  </widget>
