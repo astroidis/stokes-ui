@@ -19,10 +19,6 @@ public:
 
     void displayTable();
 
-public slots:
-    void importTable(QString filename);
-    void exportTable(QString filename);
-
 private:
     Ui::MaterialRefractionTable *ui;
     QSqlTableModel *model;

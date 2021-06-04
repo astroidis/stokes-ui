@@ -28,9 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionParameters, &QAction::triggered, this, &MainWindow::openConstants);
     connect(ui->actionPlot, &QAction::triggered, this, &MainWindow::loadPlot);
     connect(ui->actionExperiments, &QAction::triggered, this, &MainWindow::openAllExperiments);
-    connect(ui->actionOpenRefraction_2, &QAction::triggered, this, &MainWindow::openRefraction);
-    connect(ui->actionExportRefraction_2, &QAction::triggered, this, &MainWindow::exportRefraction);
-    connect(ui->actionImportRefraction_2, &QAction::triggered, this, &MainWindow::importRefraction);
+    connect(ui->actionRefraction, &QAction::triggered, this, &MainWindow::openRefraction);
     connect(ui->actionCalculate12, &QAction::triggered, this, &MainWindow::makeCalc12);
     connect(ui->actionCalculate3, &QAction::triggered, this, &MainWindow::makeCalc3);
 }
@@ -83,22 +81,6 @@ void MainWindow::openRefraction()
     ui->mdiArea->addSubWindow(table);
     table->showMaximized();
     table->displayTable();
-    connect(this, &MainWindow::refractionExportFile, table, &MaterialRefractionTable::exportTable);
-    connect(this, &MainWindow::refractionImportFile, table, &MaterialRefractionTable::importTable);
-}
-
-void MainWindow::exportRefraction()
-{
-    QString filename = QFileDialog::getSaveFileName(this, "Open", "C:\\Users\\User\\Documents\\",
-                                                    "CSV (*.csv) ;; Text (*.txt) ;; All files (*.*)");
-    emit refractionExportFile(filename);
-}
-
-void MainWindow::importRefraction()
-{
-    QString filename = QFileDialog::getOpenFileName(this, "Open", "C:\\Users\\User\\Documents\\",
-                                                    "CSV (*.csv) ;; Text (*.txt) ;; All files (*.*)");
-    emit refractionImportFile(filename);
 }
 
 void MainWindow::makeCalc12()

@@ -57,17 +57,9 @@
     <property name="title">
      <string>Расчет</string>
     </property>
-    <widget class="QMenu" name="menuRefraction">
-     <property name="title">
-      <string>Показатели преломления материалов</string>
-     </property>
-     <addaction name="actionOpenRefraction_2"/>
-     <addaction name="actionExportRefraction_2"/>
-     <addaction name="actionImportRefraction_2"/>
-    </widget>
     <addaction name="actionParameters"/>
     <addaction name="actionIntervals"/>
-    <addaction name="menuRefraction"/>
+    <addaction name="actionRefraction"/>
     <addaction name="separator"/>
     <addaction name="actionLoadData12"/>
     <addaction name="actionLoadData3"/>
@@ -154,12 +146,12 @@
   </action>
   <action name="actionCalculate12">
    <property name="text">
-    <string>Выполнить расчет (задачи 1, 2)</string>
+    <string>Расчет параметров излучения</string>
    </property>
   </action>
   <action name="actionCalculate3">
    <property name="text">
-    <string>Выполнить расчет (задача 3)</string>
+    <string>Определение типа покрытия</string>
    </property>
   </action>
   <action name="actionPlot">
@@ -222,9 +214,9 @@
     <string>Export</string>
    </property>
   </action>
-  <action name="actionOpenRefraction_2">
+  <action name="actionRefraction">
    <property name="text">
-    <string>Open</string>
+    <string>Показатели преломления</string>
    </property>
   </action>
   <action name="actionExportRefraction_2">
