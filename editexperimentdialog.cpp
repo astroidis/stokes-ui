@@ -25,8 +25,6 @@ void EditExperimentDialog::initFieldData(QSqlRecord record)
 {
     ui->editName->setText(record.value("obj_name").toString());
     ui->editComment->setPlainText(record.value("obj_comment").toString());
-    ui->editCreated->setText(record.value("date_created").toString());
-    ui->editCalculated->setText(record.value("date_calculated").toString());
     rec = record;
 }
 

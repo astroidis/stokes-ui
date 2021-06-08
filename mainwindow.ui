@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>дорогой научный руководитель не злитесь пожалуйста</string>
+   <string>Расчет вектора Стокса</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
@@ -40,6 +40,11 @@
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
     <property name="title">
      <string>Файл</string>
     </property>
@@ -51,6 +56,11 @@
     <property name="enabled">
      <bool>false</bool>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>9</pointsize>
+     </font>
+    </property>
     <property name="tearOffEnabled">
      <bool>false</bool>
     </property>
@@ -58,38 +68,27 @@
      <string>Расчет</string>
     </property>
     <addaction name="actionParameters"/>
-    <addaction name="actionIntervals"/>
     <addaction name="actionRefraction"/>
     <addaction name="separator"/>
-    <addaction name="actionLoadData12"/>
-    <addaction name="actionLoadData3"/>
+    <addaction name="actionLoadData"/>
     <addaction name="separator"/>
     <addaction name="actionCalculate12"/>
     <addaction name="actionCalculate3"/>
     <addaction name="separator"/>
     <addaction name="actionPlot"/>
    </widget>
-   <widget class="QMenu" name="menuPrint">
+   <widget class="QMenu" name="menuLog">
     <property name="enabled">
      <bool>false</bool>
     </property>
     <property name="title">
-     <string>Печать</string>
+     <string>Логи</string>
     </property>
     <addaction name="actionCalculationLog"/>
     <addaction name="separator"/>
-    <addaction name="actionDispersedRays"/>
-    <addaction name="actionNaturalRays"/>
-    <addaction name="actionPolarization"/>
-   </widget>
-   <widget class="QMenu" name="menuTesting">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <property name="title">
-     <string>Тестирование</string>
-    </property>
-    <addaction name="actionGradient"/>
+    <addaction name="actionLogDispRays"/>
+    <addaction name="actionLogNatRays"/>
+    <addaction name="actionLogPolarization"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="enabled">
@@ -101,8 +100,7 @@
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuCalculate"/>
-   <addaction name="menuPrint"/>
-   <addaction name="menuTesting"/>
+   <addaction name="menuLog"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -134,9 +132,9 @@
     <string>Интервалы</string>
    </property>
   </action>
-  <action name="actionLoadData12">
+  <action name="actionLoadData">
    <property name="text">
-    <string>Загрузить данные (задачи 1, 2)</string>
+    <string>Загрузить данные</string>
    </property>
   </action>
   <action name="actionLoadData3">
@@ -164,19 +162,19 @@
     <string>Протокол расчета</string>
    </property>
   </action>
-  <action name="actionDispersedRays">
+  <action name="actionLogDispRays">
    <property name="text">
-    <string>Печать расчета рассеянного излучения</string>
+    <string>Лог расчета рассеянного излучения</string>
    </property>
   </action>
-  <action name="actionNaturalRays">
+  <action name="actionLogNatRays">
    <property name="text">
-    <string>Печать расчета естественного излучения</string>
+    <string>Лог расчета естественного излучения</string>
    </property>
   </action>
-  <action name="actionPolarization">
+  <action name="actionLogPolarization">
    <property name="text">
-    <string>Печать расчета поляризации</string>
+    <string>Лог расчета поляризации</string>
    </property>
   </action>
   <action name="actionGradient">
@@ -231,7 +229,7 @@
   </action>
   <action name="actionExperiments">
    <property name="text">
-    <string>Ээээксперименты</string>
+    <string>Эксперименты</string>
    </property>
   </action>
  </widget>

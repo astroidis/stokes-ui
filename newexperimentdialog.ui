@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>440</width>
+    <height>440</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -17,20 +17,108 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Новые ээээксперименты</string>
+   <string>Создание эксперимента</string>
   </property>
   <property name="modal">
    <bool>true</bool>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QFormLayout" name="formLayout_2">
-     <item row="0" column="1">
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="3" column="0">
+      <widget class="QLabel" name="labelC1">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Файл С1</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLineEdit" name="editC2File"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="labelRaysFile">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Файл параметров излучения</string>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QPushButton" name="buttonRaysFile">
+       <property name="text">
+        <string>Выбрать</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="labelC3">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Файл С3</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="labelName">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Название</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1" colspan="2">
       <widget class="QLineEdit" name="editName">
        <property name="font">
         <font>
          <pointsize>11</pointsize>
         </font>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="editC1File"/>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="editRaysFile"/>
+     </item>
+     <item row="1" column="1" colspan="2">
+      <widget class="QPlainTextEdit" name="editComment">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="labelC2">
+       <property name="font">
+        <font>
+         <pointsize>11</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Файл С2</string>
        </property>
       </widget>
      </item>
@@ -46,24 +134,27 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QPlainTextEdit" name="editComment">
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-        </font>
+     <item row="5" column="1">
+      <widget class="QLineEdit" name="editC3File"/>
+     </item>
+     <item row="3" column="2">
+      <widget class="QPushButton" name="buttonC1File">
+       <property name="text">
+        <string>Выбрать</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="labelName">
-       <property name="font">
-        <font>
-         <pointsize>11</pointsize>
-        </font>
-       </property>
+     <item row="4" column="2">
+      <widget class="QPushButton" name="buttonC2File">
        <property name="text">
-        <string>Название</string>
+        <string>Выбрать</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="2">
+      <widget class="QPushButton" name="buttonC3File">
+       <property name="text">
+        <string>Выбрать</string>
        </property>
       </widget>
      </item>

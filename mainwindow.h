@@ -22,6 +22,9 @@ private:
     QString defaultTitle;
     QString selectedExperimentUUID;
 
+signals:
+    void logfile(QString filename);
+
 private slots:
     void openConstants();
     void loadPlot();
@@ -31,6 +34,9 @@ private slots:
     void openRefraction();
     void makeCalc12();
     void makeCalc3();
+    void openLoadDialog();
+    void openLogRays();
+    void openLogStats();
 
 };
 

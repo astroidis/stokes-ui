@@ -110,9 +110,9 @@ void Calc12Window::saveData()
 
 void Calc12Window::loadData()
 {
-    QMessageBox msg(QMessageBox::Warning, "Warning", "Unsaved data will be lost");
-    msg.addButton("Continue", QMessageBox::AcceptRole);
-    msg.addButton("Cancel", QMessageBox::RejectRole);
+    QMessageBox msg(QMessageBox::Warning, "Warning", "Несохраненные даныее будут удалены");
+    msg.addButton("Продолжить", QMessageBox::AcceptRole);
+    msg.addButton("Отмена", QMessageBox::RejectRole);
     switch (msg.exec()){
         case QMessageBox::AcceptRole:
             qDebug() << "Reloading data\n";
@@ -306,11 +306,11 @@ void Calc12Window::dropCalculation()
 
 void Calc12Window::setupToolbar()
 {
-    QAction *saveAct = new QAction("Save", this);
+    QAction *saveAct = new QAction("Сохранить", this);
     tb->addAction(saveAct);
     connect(saveAct, &QAction::triggered, this, &Calc12Window::saveData);
 
-    QAction *loadAct = new QAction("Load", this);
+    QAction *loadAct = new QAction("Загрузить", this);
     tb->addAction(loadAct);
     connect(loadAct, &QAction::triggered, this, &Calc12Window::loadData);
 

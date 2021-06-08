@@ -6,6 +6,9 @@
 #include <QSqlTableModel>
 #include <QToolBar>
 
+#include "logger.h"
+
+
 namespace Ui {
 class Calc3Window;
 }
@@ -26,6 +29,7 @@ private:
     QSqlTableModel *modelStats;
     QToolBar *tb;
     QString experiment;
+    Logger logger;
 
     void calcC1();
     void calcC2();

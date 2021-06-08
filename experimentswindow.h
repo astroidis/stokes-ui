@@ -28,11 +28,16 @@ private:
 
     void setupToolbar();
     void setupTable();
+    void importRaysData(QString expuuid, QString filename);
+    void importC1Data(QString expuuid, QString filename);
+    void importC2Data(QString expuuid, QString filename);
+    void importC3Data(QString expuuid, QString filename);
 
 private slots:
     void openAddDialog();
     void deleteExperiment();
     void selectExperiment();
+    void importExperimentData(QString expuuid, QString frays, QString fc1, QString fc2, QString fc3);
 //    void openLoadDialog();
 //    void openUpdateDialog();
 };

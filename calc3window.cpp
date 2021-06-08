@@ -10,6 +10,7 @@
 
 #include "calculations/task3.h"
 
+
 Calc3Window::Calc3Window(QString experiment_id, QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Calc3Window),
@@ -17,7 +18,8 @@ Calc3Window::Calc3Window(QString experiment_id, QWidget *parent) :
     modelC2Calc(new QSqlTableModel(this, QSqlDatabase::database("stokes_db"))),
     modelC3Calc(new QSqlTableModel(this, QSqlDatabase::database("stokes_db"))),
     modelStats(new QSqlTableModel(this, QSqlDatabase::database("stokes_db"))),
-    experiment(experiment_id)
+    experiment(experiment_id),
+    logger("statistics.log")
 {
     ui->setupUi(this);
     setupToolbar();
@@ -38,11 +40,11 @@ Calc3Window::~Calc3Window()
 void Calc3Window::setupToolbar()
 {
     tb = new QToolBar(this);
-    QAction *saveAct = new QAction("Save", this);
+    QAction *saveAct = new QAction("Сохранить", this);
     tb->addAction(saveAct);
     connect(saveAct, &QAction::triggered, this, &Calc3Window::saveData);
 
-    QAction *loadAct = new QAction("Load", this);
+    QAction *loadAct = new QAction("Загрузить", this);
     tb->addAction(loadAct);
     connect(loadAct, &QAction::triggered, this, &Calc3Window::loadData);
 
@@ -130,6 +132,7 @@ void Calc3Window::calcrbtnClicked()
     modelStats->setTable("statistics");
     modelStats->setEditStrategy(QSqlTableModel::OnManualSubmit);
     modelStats->setFilter(QString("experiment_id = '%1'").arg(experiment));
+    modelStats->setSort(modelStats->fieldIndex("obj_name"), Qt::AscendingOrder);
     modelStats->select();
 
     ui->statsTable->setModel(modelStats);
@@ -180,7 +183,8 @@ void Calc3Window::calcStats()
     items2.reserve(model2.rowCount());
     items3.reserve(model3.rowCount());
 
-    qDebug() << "Calculating stat C1";
+    logger.logInfo("Calculating stat C1");
+
     for (int i = 0; i < model1.rowCount(); i++){
         QSqlRecord rec = model1.record(i);
         Task3::ItemC1 a(rec.value("dTheta").toDouble(), rec.value("Q").toDouble(),
@@ -192,7 +196,8 @@ void Calc3Window::calcStats()
 
     auto stat1 = Task3::calcStat(items1);
 
-    qDebug() << "Calculating stat C2";
+    logger.logInfo("Calculating stat C2");
+
     for (int i = 0; i < model2.rowCount(); i++){
         QSqlRecord rec = model2.record(i);
         Task3::ItemC2 a(rec.value("dGamma").toDouble(), rec.value("Q").toDouble(),
@@ -204,7 +209,8 @@ void Calc3Window::calcStats()
 
     auto stat2 = Task3::calcStat(items2);
 
-    qDebug() << "Calculating stat C3";
+    logger.logInfo("Calculating stat C3");
+
     for (int i = 0; i < model3.rowCount(); i++){
         QSqlRecord rec = model3.record(i);
         Task3::ItemC3 a(rec.value("dGamma").toDouble(), rec.value("Alfa").toDouble(),
@@ -247,9 +253,9 @@ void Calc3Window::loadData()
         table = ui->statsTable;
     }
 
-    QMessageBox msg(QMessageBox::Warning, "Warning", "Unsaved data will be lost");
-    msg.addButton("Continue", QMessageBox::AcceptRole);
-    msg.addButton("Cancel", QMessageBox::RejectRole);
+    QMessageBox msg(QMessageBox::Warning, "Warning", "Несохраненные данные будут удалены");
+    msg.addButton("Продолжить", QMessageBox::AcceptRole);
+    msg.addButton("Отмена", QMessageBox::RejectRole);
     switch (msg.exec()){
         case QMessageBox::AcceptRole:
             qDebug() << "Reloading data\n";

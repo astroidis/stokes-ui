@@ -12,6 +12,8 @@
 #include "calc3window.h"
 #include "plotwidget.h"
 #include "constantswindow.h"
+#include "loaddatadialog.h"
+#include "logfilewidget.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -31,6 +33,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionRefraction, &QAction::triggered, this, &MainWindow::openRefraction);
     connect(ui->actionCalculate12, &QAction::triggered, this, &MainWindow::makeCalc12);
     connect(ui->actionCalculate3, &QAction::triggered, this, &MainWindow::makeCalc3);
+    connect(ui->actionLoadData, &QAction::triggered, this, &MainWindow::openLoadDialog);
+    connect(ui->actionLogPolarization, &QAction::triggered, this, &MainWindow::openLogStats);
 }
 
 MainWindow::~MainWindow()
@@ -65,8 +69,7 @@ void MainWindow::openAllExperiments()
 void MainWindow::setMenuEnabled()
 {
     ui->menuCalculate->setEnabled(true);
-    ui->menuPrint->setEnabled(true);
-    ui->menuTesting->setEnabled(true);
+    ui->menuLog->setEnabled(true);
 }
 
 void MainWindow::currentExperiment(QString uuid, QString name)
@@ -95,4 +98,24 @@ void MainWindow::makeCalc3()
     Calc3Window *calc = new Calc3Window(selectedExperimentUUID);
     ui->mdiArea->addSubWindow(calc);
     calc->showMaximized();
+}
+
+void MainWindow::openLoadDialog()
+{
+    LoadDataDialog *lddlg = new LoadDataDialog();
+    lddlg->exec();
+}
+
+void MainWindow::openLogRays()
+{
+    LogFileWidget *lfw = new LogFileWidget("rays.log");
+    ui->mdiArea->addSubWindow(lfw);
+    lfw->showMaximized();
+}
+
+void MainWindow::openLogStats()
+{
+    LogFileWidget *lfw = new LogFileWidget("statistics.log");
+    ui->mdiArea->addSubWindow(lfw);
+    lfw->showMaximized();
 }

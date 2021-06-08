@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>480</width>
-    <height>480</height>
+    <height>390</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -63,54 +63,6 @@
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="labelCreated">
-     <property name="font">
-      <font>
-       <pointsize>11</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Дата создания</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLineEdit" name="editCreated">
-     <property name="font">
-      <font>
-       <pointsize>11</pointsize>
-      </font>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLabel" name="labelCalculated">
-     <property name="font">
-      <font>
-       <pointsize>11</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Дата вычисления</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QLineEdit" name="editCalculated">
-     <property name="font">
-      <font>
-       <pointsize>11</pointsize>
-      </font>
-     </property>
-     <property name="readOnly">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <spacer name="horizontalSpacer">
@@ -133,7 +85,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Save shit</string>
+        <string>Сохранить</string>
        </property>
       </widget>
      </item>
@@ -145,7 +97,7 @@
         </font>
        </property>
        <property name="text">
-        <string>Cancel shit</string>
+        <string>Отмена</string>
        </property>
       </widget>
      </item>

@@ -7,8 +7,6 @@
 
 namespace Task3
 {
-    //const double PI = 3.141592;
-
     enum class PlaneTypes
     {
         IS_DIEL,

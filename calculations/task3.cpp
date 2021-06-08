@@ -6,6 +6,7 @@
 
 #include "calculation.h"
 #include "chisqr.h"
+#include "logger.h"
 
 using std::sqrt;
 using std::min;
@@ -181,8 +182,7 @@ double stdev(vector<Task3::ItemC> data)
 std::map<std::string, double> Task3::calcStat(std::vector<ItemC> &data)
 {
     std::map<std::string, double> stat;
-
-    qDebug() << "Calc total mean sko";
+    Logger logger("statistics.log");
 
     vector<ItemC> data_c;
     data_c.reserve(data.size());
@@ -195,6 +195,10 @@ std::map<std::string, double> Task3::calcStat(std::vector<ItemC> &data)
     double countP = data_c.size(),
             midP = mean(data_c),
             sdP = stdev(data_c);
+
+    logger.logInfo(QString("Всего: %1").arg(countP, 0, 'g',3));
+    logger.logInfo(QString("Среднее (по всем): %1").arg(midP, 0, 'g',3));
+    logger.logInfo(QString("СКО (по всем): %1").arg(sdP, 0, 'g',3));
 
     stat["Всего"] = countP;
     stat["Среднее (по всем)"] = midP;
@@ -209,7 +213,6 @@ std::map<std::string, double> Task3::calcStat(std::vector<ItemC> &data)
         }
     }
 
-    qDebug() << "Calc mean min max disp";
     double mid = mean(data_n);
     double sd = stdev(data_n);
     auto compare = [](const ItemC &x1, const ItemC &x2)->bool{return x1.value < x2.value;};
@@ -220,27 +223,37 @@ std::map<std::string, double> Task3::calcStat(std::vector<ItemC> &data)
         x.value_norm = (x.value - mid) / sd;
     }
 
+    logger.logInfo(QString("Минимальное: %1").arg(min_v, 0, 'g',3));
+    logger.logInfo(QString("Максимальное: %1").arg(max_v, 0, 'g',3));
+    logger.logInfo(QString("Среднее: %1").arg(mid, 0, 'g',3));
+    logger.logInfo(QString("Дисперсия: %1").arg(sd * sd, 0, 'g',3));
+    logger.logInfo(QString("СКО: %1").arg(sd, 0, 'g',3));
+
     stat["Минимальное"] = min_v;
     stat["Максимальное"] = max_v;
     stat["Среднее"] = mid;
     stat["Дисперсия"] = sd * sd;
     stat["СКО"] = sd;
 
-    qDebug() << "Calc min max normalized";
     int count_n = data_n.size();
     auto compare_n = [](const ItemC &x1, const ItemC &x2)->bool{return x1.value_norm < x2.value_norm;};
 
     double min_n = (*std::min_element(data_n.begin(), data_n.end(), compare_n)).value_norm;
     double max_n = (*std::max_element(data_n.begin(), data_n.end(), compare_n)).value_norm;
 
+    logger.logInfo(QString("Минимальное (норм): %1").arg(min_n, 0, 'g',3));
+    logger.logInfo(QString("Максимальное (норм): %1").arg(max_n, 0, 'g',3));
+
     stat["Минимальное (норм)"] = min_n;
     stat["Максимальное (норм)"] = max_n;
 
-    qDebug() << "get intervals";
+    logger.logInfo("Вычисление интервалов");
+
     auto intervals = getIntervals(Interval::INTERVAL_COUNT, min_n, max_n);
     double SumProb = 0;
     for (const auto &x : intervals){
         SumProb += x.pi;
+        logger.logInfo(QString("Interval(%1, %2)").arg(x.low, 0, 'g',3).arg(x.high, 0, 'g',3));
     }
 
     for (const auto &x : data_n){
@@ -277,11 +290,13 @@ std::map<std::string, double> Task3::calcStat(std::vector<ItemC> &data)
                 index = Interval::INTERVAL_COUNT - 1;
         }
 
+        logger.logInfo(QString("Значение : %1   Интервал : %2")
+                       .arg(value, 0, 'g',3).arg(index, 0, 'g',3));
+
         index = std::clamp(index, 0, Interval::INTERVAL_COUNT-1);
         intervals[index].value_count++;
     }  // for (const auto &x : data_n)
 
-    qDebug() << "calc Pi[] N[]";
     double pis[5] = {0}, ns[5] = {0};
 
     int i = 0;
@@ -292,7 +307,8 @@ std::map<std::string, double> Task3::calcStat(std::vector<ItemC> &data)
         pis[i] = x.pi;
         ns[i] = x.value_count;
 
-        qDebug() << "i=" << i << "Pi=" << x.pi;
+        logger.logInfo(QString("P[%1] : %2   N[%1] : %3").arg(i, 0, 'g',3)
+                       .arg(x.pi, 0, 'g',3).arg(x.value_count, 0, 'g',3));
 
         i++;
     }
@@ -308,19 +324,17 @@ std::map<std::string, double> Task3::calcStat(std::vector<ItemC> &data)
     stat["N[3]"] = ns[3];
     stat["N[4]"] = ns[4];
 
-    qDebug() << "PI" << stat["P[0]"] << stat["P[1]"] << stat["P[2]"] << stat["P[3]"] << "\n";
-
-    qDebug() << "Calc hi params";
     double SumHi = 0;
     for (const auto &x : intervals)
         SumHi += x.ni_npi_norm;
 
     double SumHiTeor = chi_square_inverse(0.05, Interval::INTERVAL_COUNT-3);
 
+    logger.logInfo(QString("Хи-квадрат (эмп.) : %1").arg(SumHi, 0, 'g', 3));
+    logger.logInfo(QString("Хи-квадрат (теор.) : %1").arg(SumHiTeor, 0, 'g', 3));
+
     stat["Хи-квадрат (эмп.)"] = SumHi;
     stat["Хи-квадрат (теор.)"] = SumHiTeor;
-
-    qDebug() << "calc Ek Tk Ftk";
 
     data_c.clear();
     data_c.reserve(data_n.size());
@@ -336,6 +350,10 @@ std::map<std::string, double> Task3::calcStat(std::vector<ItemC> &data)
             Ek = abs(d - midE),
             Tk = Ek / sdE,
             FTk = 2 * Calculation::laplace(Tk);
+
+    logger.logInfo(QString("Ek : %1").arg(Ek, 0, 'g', 3));
+    logger.logInfo(QString("Tk : %1").arg(Tk, 0, 'g', 3));
+    logger.logInfo(QString("F(Tk) : %1").arg(FTk, 0, 'g', 3));
 
     stat["Ek"] = Ek;
     stat["Tk"] = Tk;

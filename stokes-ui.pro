@@ -21,6 +21,9 @@ SOURCES += \
     database.cpp \
     editexperimentdialog.cpp \
     experimentswindow.cpp \
+    loaddatadialog.cpp \
+    logfilewidget.cpp \
+    logger.cpp \
     main.cpp \
     mainwindow.cpp \
     materialrefractiontable.cpp \
@@ -40,6 +43,9 @@ HEADERS += \
     database.h \
     editexperimentdialog.h \
     experimentswindow.h \
+    loaddatadialog.h \
+    logfilewidget.h \
+    logger.h \
     mainwindow.h \
     materialrefractiontable.h \
     newexperimentdialog.h \
@@ -52,6 +58,8 @@ FORMS += \
     constantswindow.ui \
     editexperimentdialog.ui \
     experimentswindow.ui \
+    loaddatadialog.ui \
+    logfilewidget.ui \
     mainwindow.ui \
     materialrefractiontable.ui \
     newexperimentdialog.ui \

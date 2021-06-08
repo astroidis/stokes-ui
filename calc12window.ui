@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Параметры излучения</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -36,7 +36,7 @@
           <x>0</x>
           <y>0</y>
           <width>287</width>
-          <height>487</height>
+          <height>459</height>
          </rect>
         </property>
         <property name="sizePolicy">
@@ -178,20 +178,6 @@
                  </property>
                  <property name="checked">
                   <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="pCalcButton">
-                 <property name="text">
-                  <string>Рассчитать</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="pCalcAllButton">
-                 <property name="text">
-                  <string>Рассчитать все</string>
                  </property>
                 </widget>
                </item>
