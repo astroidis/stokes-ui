@@ -6,6 +6,7 @@
 #include <QDebug>
 
 #include "calculations/task12.h"
+#include "logger.h"
 
 
 Calc12Window::Calc12Window(QString experiment_id, QWidget *parent) :
@@ -50,39 +51,50 @@ void Calc12Window::openTable()
 
 void Calc12Window::makeCalculations()
 {
-    for (int i = 0; i < model->rowCount(); i++){
-        QSqlRecord rec = model->record(i);
+    Logger logger("rays.log");
+    logger.logInfo("Вычисление параметров излучения");
+    for (int j = 0; j < model->rowCount(); j++){
+        QSqlRecord rec = model->record(j);
         double alfa = rec.value("Alfa").toDouble();
         double beta = rec.value("Beta").toDouble();
-        Task12 t(i, alfa, beta);
-        t.loadIntensities(0,
-                          rec.value("I1").toDouble(),
-                          rec.value("Tau1").toDouble(),
-                          rec.value("Phi1").toDouble());
-        t.loadIntensities(1,
-                          rec.value("I2").toDouble(),
-                          rec.value("Tau2").toDouble(),
-                          rec.value("Phi2").toDouble());
-        t.loadIntensities(2,
-                          rec.value("I3").toDouble(),
-                          rec.value("Tau3").toDouble(),
-                          rec.value("Phi3").toDouble());
-        t.loadIntensities(3,
-                          rec.value("I4").toDouble(),
-                          rec.value("Tau4").toDouble(),
-                          rec.value("Phi4").toDouble());
+        Task12 t(j, alfa, beta);
+
+        logger.logInfo(QString("Task12(%1, %2, %3)").arg(j).arg(alfa, 0, 'g', 3).arg(beta, 0, 'g', 3));
+
+        double i = rec.value("I1").toDouble();
+        double phi = rec.value("Tau1").toDouble();
+        double tau = rec.value("Phi1").toDouble();
+        logger.logInfo(QString("Intensity(0, %1, %2, %3)").arg(i, 0, 'g', 3)
+                       .arg(phi, 0, 'g', 3).arg(tau, 0, 'g', 3));
+        t.loadIntensities(0, i, phi, tau);
+
+        i = rec.value("I2").toDouble();
+        phi = rec.value("Tau2").toDouble();
+        tau = rec.value("Phi2").toDouble();
+        logger.logInfo(QString("Intensity(1, %1, %2, %3)").arg(i, 0, 'g', 3)
+                       .arg(phi, 0, 'g', 3).arg(tau, 0, 'g', 3));
+        t.loadIntensities(1, i, phi, tau);
+
+        i = rec.value("I3").toDouble();
+        phi = rec.value("Tau3").toDouble();
+        tau = rec.value("Phi3").toDouble();
+        logger.logInfo(QString("Intensity(2, %1, %2, %3)").arg(i, 0, 'g', 3)
+                       .arg(phi, 0, 'g', 3).arg(tau, 0, 'g', 3));
+        t.loadIntensities(2, i, phi, tau);
+
+        i = rec.value("I4").toDouble();
+        tau = rec.value("Tau4").toDouble();
+        phi = rec.value("Phi4").toDouble();
+        logger.logInfo(QString("Intensity(3, %1, %2, %3)").arg(i, 0, 'g', 3)
+                       .arg(phi, 0, 'g', 3).arg(tau, 0, 'g', 3));
+        t.loadIntensities(3, i, tau, phi);
 
         auto vectors = t.calcRadiation(std::complex(1.4, -4.53), 52.0);
         auto sv = vectors.first;
         auto nsv = vectors.second;
         auto gr = Calculation::Gradient();
-        bool a = true;
-        if (ui->analyticRBtn->isChecked()){
-            a = true;
-        }
-        else if (ui->numericRBtn->isChecked()){
-            a = false;
-        }
+        bool a = ui->analyticRBtn->isChecked();
+
         Reflection ref = t.calcReflection(std::complex(1.4, -4.53), 52.0, gr, a);
 
         rec.setValue("J", QString::number(sv.J, 'f', 4));
@@ -137,40 +149,53 @@ void Calc12Window::calculateOne()
     if (ui->tableView->selectionModel()->selectedRows().isEmpty()){
         return;
     }
+
+    Logger logger("rays.log");
+    logger.logInfo("Вычисление параметров излучения");
+
     QModelIndex ind = ui->tableView->selectionModel()->selectedRows().back();
-    int i = ind.row();
-    QSqlRecord rec = model->record(i);
+    int index = ind.row();
+    QSqlRecord rec = model->record(index);
     double alfa = rec.value("Alfa").toDouble();
     double beta = rec.value("Beta").toDouble();
-    Task12 t(i, alfa, beta);
-    t.loadIntensities(0,
-                      rec.value("I1").toDouble(),
-                      rec.value("Tau1").toDouble(),
-                      rec.value("Phi1").toDouble());
-    t.loadIntensities(1,
-                      rec.value("I2").toDouble(),
-                      rec.value("Tau2").toDouble(),
-                      rec.value("Phi2").toDouble());
-    t.loadIntensities(2,
-                      rec.value("I3").toDouble(),
-                      rec.value("Tau3").toDouble(),
-                      rec.value("Phi3").toDouble());
-    t.loadIntensities(3,
-                      rec.value("I4").toDouble(),
-                      rec.value("Tau4").toDouble(),
-                      rec.value("Phi4").toDouble());
+
+    logger.logInfo(QString("Task12(%1, %2, %3)").arg(index).arg(alfa, 0, 'g', 3).arg(beta, 0, 'g', 3));
+
+    Task12 t(index, alfa, beta);
+    double i = rec.value("I1").toDouble();
+    double phi = rec.value("Tau1").toDouble();
+    double tau = rec.value("Phi1").toDouble();
+    logger.logInfo(QString("Intensity(0, %1, %2, %3)").arg(i, 0, 'g', 3)
+                   .arg(phi, 0, 'g', 3).arg(tau, 0, 'g', 3));
+    t.loadIntensities(0, i, phi, tau);
+
+    i = rec.value("I2").toDouble();
+    phi = rec.value("Tau2").toDouble();
+    tau = rec.value("Phi2").toDouble();
+    logger.logInfo(QString("Intensity(1, %1, %2, %3)").arg(i, 0, 'g', 3)
+                   .arg(phi, 0, 'g', 3).arg(tau, 0, 'g', 3));
+    t.loadIntensities(1, i, phi, tau);
+
+    i = rec.value("I3").toDouble();
+    phi = rec.value("Tau3").toDouble();
+    tau = rec.value("Phi3").toDouble();
+    logger.logInfo(QString("Intensity(2, %1, %2, %3)").arg(i, 0, 'g', 3)
+                   .arg(phi, 0, 'g', 3).arg(tau, 0, 'g', 3));
+    t.loadIntensities(2, i, phi, tau);
+
+    i = rec.value("I4").toDouble();
+    tau = rec.value("Tau4").toDouble();
+    phi = rec.value("Phi4").toDouble();
+    logger.logInfo(QString("Intensity(3, %1, %2, %3)").arg(i, 0, 'g', 3)
+                   .arg(phi, 0, 'g', 3).arg(tau, 0, 'g', 3));
+    t.loadIntensities(3, i, tau, phi);
 
     auto vectors = t.calcRadiation(std::complex(1.4, -4.53), 52.0);
     auto sv = vectors.first;
     auto nsv = vectors.second;
     auto gr = Calculation::Gradient();
-    bool a = true;
-    if (ui->analyticRBtn->isChecked()){
-        a = true;
-    }
-    else if (ui->numericRBtn->isChecked()){
-        a = false;
-    }
+    bool a = ui->analyticRBtn->isChecked();
+
     Reflection ref = t.calcReflection(std::complex(1.4, -4.53), 52.0, gr, a);
 
     rec.setValue("J", QString::number(sv.J, 'f', 4));
@@ -187,7 +212,7 @@ void Calc12Window::calculateOne()
     rec.setValue("Beta1", QString::number(ref.beta1, 'f', 4));
     rec.setValue("Re_Hi", QString::number(ref.re_hi, 'f', 4));
     rec.setValue("Im_Hi", QString::number(ref.im_hi, 'f', 4));
-    model->setRecord(i, rec);
+    model->setRecord(index, rec);
 }
 
 void Calc12Window::displayTauPhi()

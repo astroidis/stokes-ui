@@ -84,10 +84,8 @@
     <property name="title">
      <string>Логи</string>
     </property>
-    <addaction name="actionCalculationLog"/>
     <addaction name="separator"/>
-    <addaction name="actionLogDispRays"/>
-    <addaction name="actionLogNatRays"/>
+    <addaction name="actionLogRays"/>
     <addaction name="actionLogPolarization"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
@@ -162,9 +160,9 @@
     <string>Протокол расчета</string>
    </property>
   </action>
-  <action name="actionLogDispRays">
+  <action name="actionLogRays">
    <property name="text">
-    <string>Лог расчета рассеянного излучения</string>
+    <string>Лог расчета параметров излучения</string>
    </property>
   </action>
   <action name="actionLogNatRays">

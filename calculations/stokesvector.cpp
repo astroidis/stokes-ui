@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <QDebug>
 
+#include "logger.h"
+
 using std::cos;
 using std::sin;
 using std::sqrt;
@@ -55,6 +57,9 @@ void Calculation::StokesVector::swap(int k, int n, double A[4][5])
 
 void Calculation::StokesVector::calculate(Intensity I1, Intensity I2, Intensity I3, Intensity I4)
 {
+    Logger logger("rays.log");
+    logger.logInfo("Рассчет вектора");
+
     double A[4][5];
     double X[4] = {0, 0, 0, 0};
 
@@ -88,6 +93,12 @@ void Calculation::StokesVector::calculate(Intensity I1, Intensity I2, Intensity 
     A[2][4] = 2 * I3.i;
     A[3][4] = 2 * I4.i;
 
+    logger.logDebug("Матрица");
+    for (int i = 0; i < 4; i++){
+        logger.logDebug(QString("%1 %2 %3 %4 %5").arg(A[i][0], 7, 'f', 3).arg(A[i][1], 7, 'f', 3)
+                        .arg(A[i][2], 7, 'f', 3).arg(A[i][3], 7, 'f', 3).arg(A[i][4], 7, 'f', 3));
+    }
+
     for (int k = 0; k < 4; k++){
         if (abs(A[k][k]) < 1e-10){
             std::vector<double> list;
@@ -114,6 +125,12 @@ void Calculation::StokesVector::calculate(Intensity I1, Intensity I2, Intensity 
                 A[j][i] -= r * A[k][i];
             }
         }
+
+        logger.logDebug("Матрица");
+        for (int i = 0; i < 4; i++){
+            logger.logDebug(QString("%1 %2 %3 %4 %5").arg(A[i][0], 7, 'g', 3).arg(A[i][1], 7, 'g', 3)
+                            .arg(A[i][2], 7, 'g', 3).arg(A[i][3], 7, 'g', 3).arg(A[i][4], 7, 'g', 3));
+        }
     }  // end for (int k = 0; k < 4; k++)
 
     for (int k = 3; k > -1; k--){
@@ -129,6 +146,10 @@ void Calculation::StokesVector::calculate(Intensity I1, Intensity I2, Intensity 
 
         X[k] = (A[k][4] - r) / A[k][k];
     }
+
+    logger.logDebug("Вектор");
+    logger.logDebug(QString("%1 %2 %3 %4").arg(X[0], 7, 'g', 3).arg(X[1], 7, 'g', 3)
+                    .arg(X[2], 7, 'g', 3).arg(X[3], 7, 'g', 3));
 
     J = X[0];
     Q = X[1];
@@ -166,6 +187,9 @@ Calculation::NaturalStokesVector::NaturalStokesVector(double j, double q, double
 void Calculation::NaturalStokesVector::calculateNatural(Calculation::StokesVector &vector,
                                                         std::complex<double> nju, double phi)
 {
+    Logger logger("rays.log");
+    logger.logInfo("Расчет натурального вектора");
+
     double cphi = cos(phi / 180.0), sphi = sin(phi / 180.0);
     std::complex<double> nju2 = nju * nju,
                          cosphi(cphi, 0.0),
@@ -173,6 +197,12 @@ void Calculation::NaturalStokesVector::calculateNatural(Calculation::StokesVecto
                          sinphi2 = sinphi * sinphi,
                          sn = nju2 - sinphi2,
                          sq = Calculation::squareRoot(sn, 0);
+
+    logger.logDebug(QString("Cos(phi) : (%1, %2)").arg(cosphi.real(), 0, 'g', 3).arg(cosphi.imag(), 0, 'g', 3));
+    logger.logDebug(QString("Sin(phi) : (%1, %2)").arg(sinphi.real(), 0, 'g', 3).arg(cosphi.imag(), 0, 'g', 3));
+    logger.logDebug(QString("Nju^2 : (%1, %2)").arg(nju2.real(), 0, 'g', 3).arg(nju2.imag(), 0, 'g', 3));
+    logger.logDebug(QString("Sn : (%1, %2)").arg(sn.real(), 0, 'g', 3).arg(sn.imag(), 0, 'g', 3));
+    logger.logDebug(QString("Sq : (%1, %2)").arg(sq.real(), 0, 'g', 3).arg(sq.imag(), 0, 'g', 3));
 
     if (sq.imag() > 0){
         sq = Calculation::squareRoot(sn, 1);
@@ -187,6 +217,15 @@ void Calculation::NaturalStokesVector::calculateNatural(Calculation::StokesVecto
                          r2 = ch2 / zn2,
                          r1r2_ = r1 * std::conj(r2);
 
+    logger.logDebug(QString("Ch1 : (%1, %2)").arg(ch1.real(), 0, 'g', 3).arg(ch1.imag(), 0, 'g', 3));
+    logger.logDebug(QString("Zn1 : (%1, %2)").arg(zn1.real(), 0, 'g', 3).arg(zn1.imag(), 0, 'g', 3));
+    logger.logDebug(QString("Nju^2 * Cos(phi) : (%1, %2)").arg(nju2cosphi.real(), 0, 'g', 3).arg(nju2cosphi.imag(), 0, 'g', 3));
+    logger.logDebug(QString("Ch2 : (%1, %2)").arg(ch2.real(), 0, 'g', 3).arg(ch2.imag(), 0, 'g', 3));
+    logger.logDebug(QString("Zn2 : (%1, %2)").arg(zn2.real(), 0, 'g', 3).arg(zn2.imag(), 0, 'g', 3));
+    logger.logDebug(QString("R1 : (%1, %2)").arg(r1.real(), 0, 'g', 3).arg(r1.imag(), 0, 'g', 3));
+    logger.logDebug(QString("R2 : (%1, %2)").arg(r2.real(), 0, 'g', 3).arg(r2.imag(), 0, 'g', 3));
+    logger.logDebug(QString("R1r1_ : (%1, %2)").arg(r1r2_.real(), 0, 'g', 3).arg(r1r2_.imag(), 0, 'g', 3));
+
     double r1_2 = abs(r1) * abs(r1),
            r2_2 = abs(r2) * abs(r2),
            r1r2_2 = abs(r1r2_) * abs(r1r2_);
@@ -195,4 +234,10 @@ void Calculation::NaturalStokesVector::calculateNatural(Calculation::StokesVecto
     Q = (vector.Q * (r1_2 + r2_2) - vector.J * (r1_2 - r2_2)) / (2 * r1_2 * r2_2);
     U = (vector.U * r1r2_.real() + vector.V * r1r2_.imag()) / r1r2_2;
     U = (vector.V * r1r2_.real() - vector.U * r1r2_.imag()) / r1r2_2;
+
+    logger.logDebug("Вектор");
+    logger.logDebug(QString("J : %1").arg(J, 0, 'g', 3));
+    logger.logDebug(QString("Q : %1").arg(Q, 0, 'g', 3));
+    logger.logDebug(QString("U : %1").arg(U, 0, 'g', 3));
+    logger.logDebug(QString("V : %1").arg(V, 0, 'g', 3));
 }

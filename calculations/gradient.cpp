@@ -1,5 +1,7 @@
 #include "calculation.h"
 
+#include "logger.h"
+
 using std::sin;
 using std::cos;
 using std::sqrt;
@@ -46,23 +48,47 @@ double Calculation::Gradient::dFdy(double x, double y)
 
 std::tuple<double, double, bool> Calculation::Gradient::gradientMethod(double x0, double y0, double eps)
 {
+    Logger logger("rays.log");
+    logger.logInfo("Вычисление градиента");
+
     double t = PI / 8;
     double x = x0, y = y0;
     int i = 0, n = 1000;
 
+    logger.logDebug(QString("t : %1").arg(t, 0, 'f', 3));
+    logger.logDebug(QString("x : %1").arg(x, 0, 'f', 3));
+    logger.logDebug(QString("y : %1").arg(y, 0, 'f', 3));
+    logger.logDebug(QString("i : %1").arg(i));
+    logger.logDebug(QString("n : %1").arg(n));
+
     while (1){
+        logger.logDebug(QString("Итерация %1").arg(i));
+
         if (i > n){
             x = x0;
             y = y0;
+
+            logger.logDebug("Вычисление неуспешно");
+            logger.logDebug(QString("x : %1").arg(x, 0, 'f', 3));
+            logger.logDebug(QString("y : %1").arg(y, 0, 'f', 3));
+
             return std::make_tuple(x, y, false);
         }
 
         double xt = x - t * dFdx(x, y);
         double yt = y - t * dFdy(x, y);
 
+        logger.logDebug(QString("xt : %1").arg(xt, 0, 'f', 3));
+        logger.logDebug(QString("yt : %1").arg(yt, 0, 'f', 3));
+
         if ( abs(sqrt((x-xt) * (x-xt)) + sqrt((y-yt) * (y-yt))) < eps ){
             x = xt;
             y = yt;
+
+            logger.logDebug("Вычисление успешно");
+            logger.logDebug(QString("x : %1").arg(x, 0, 'f', 3));
+            logger.logDebug(QString("y : %1").arg(y, 0, 'f', 3));
+
             return std::make_tuple(x, y, true);
         }
 
@@ -73,6 +99,9 @@ std::tuple<double, double, bool> Calculation::Gradient::gradientMethod(double x0
             x = xt;
             y = yt;
         }
+
+        logger.logDebug(QString("x : %1").arg(x, 0, 'f', 3));
+        logger.logDebug(QString("y : %1").arg(y, 0, 'f', 3));
 
         i++;
     }

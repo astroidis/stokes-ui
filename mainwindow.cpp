@@ -6,7 +6,6 @@
 #include <QPushButton>
 
 #include "experimentswindow.h"
-#include "newexperimentdialog.h"
 #include "materialrefractiontable.h"
 #include "calc12window.h"
 #include "calc3window.h"
@@ -34,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionCalculate12, &QAction::triggered, this, &MainWindow::makeCalc12);
     connect(ui->actionCalculate3, &QAction::triggered, this, &MainWindow::makeCalc3);
     connect(ui->actionLoadData, &QAction::triggered, this, &MainWindow::openLoadDialog);
+    connect(ui->actionLogRays, &QAction::triggered, this, &MainWindow::openLogRays);
     connect(ui->actionLogPolarization, &QAction::triggered, this, &MainWindow::openLogStats);
 }
 

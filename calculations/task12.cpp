@@ -1,5 +1,7 @@
 #include "task12.h"
 
+#include "logger.h"
+
 using std::sin;
 using std::cos;
 using std::sqrt;
@@ -27,6 +29,10 @@ void Task12::loadIntensities(int idx, double i, double tau, double phi)
 std::pair<Calculation::StokesVector, Calculation::NaturalStokesVector>
 Task12::calcRadiation(std::complex<double> nju, double phi)
 {
+    Logger logger("rays.log");
+
+    logger.logInfo("Рассчет рассеивания");
+
     SV.calculate(I[0], I[1], I[2], I[3]);
     NSV.calculateNatural(SV, nju, phi);
     return std::make_pair(SV, NSV);
@@ -35,6 +41,9 @@ Task12::calcRadiation(std::complex<double> nju, double phi)
 Reflection Task12::calcReflection(std::complex<double> nju, double phi,
                                   Calculation::Gradient &gradient, bool isanalytic)
 {
+    Logger logger("rays.log");
+    logger.logInfo("Рассчет преломления");
+
     auto rad = calcRadiation(nju, phi);
     SV = rad.first;
     NSV = rad.second;
@@ -43,6 +52,12 @@ Reflection Task12::calcReflection(std::complex<double> nju, double phi,
     double Q = SV.Q;
     double U = SV.U;
     double V = SV.V;
+
+    logger.logDebug("Вектор");
+    logger.logDebug(QString("J : %1").arg(J, 0, 'g', 3));
+    logger.logDebug(QString("Q : %1").arg(Q, 0, 'g', 3));
+    logger.logDebug(QString("U : %1").arg(U, 0, 'g', 3));
+    logger.logDebug(QString("V : %1").arg(V, 0, 'g', 3));
 
     if (Q*Q + V*V + U*U < 1e-5){
         gradient.W = 0;
@@ -82,11 +97,15 @@ Reflection Task12::calcReflection(std::complex<double> nju, double phi,
         bool done = std::get<2>(gr);
 
         if (!done){
-            std::exit(-1);
+            logger.logDebug("Решение методом градиента не найдено");
+            auto nan_value = std::numeric_limits<double>::quiet_NaN();
+            return Reflection{nan_value, nan_value, nan_value, nan_value, nan_value, nan_value};
         }
 
         if (abs(gradient.Fxy(x, y)) > 1e-5){
-            std::exit(-1);
+            logger.logDebug("Система не имеет решения");
+            auto nan_value = std::numeric_limits<double>::quiet_NaN();
+            return Reflection{nan_value, nan_value, nan_value, nan_value, nan_value, nan_value};
         }
 
         double a = cos(-2*y) + gradient.W;
@@ -95,7 +114,9 @@ Reflection Task12::calcReflection(std::complex<double> nju, double phi,
         double d = b * b - 4 * c * a;
 
         if (d < 0){
-            std::exit(-1);
+            logger.logDebug("Не найдено второе решение");
+            auto nan_value = std::numeric_limits<double>::quiet_NaN();
+            return Reflection{nan_value, nan_value, nan_value, nan_value, nan_value, nan_value};
         }
 
         x1 = std::atan( (-b + sqrt(d)) / (2 * a) );
@@ -117,6 +138,14 @@ Reflection Task12::calcReflection(std::complex<double> nju, double phi,
 
     auto res = std::complex<double> {tan(Alfa), tan(Beta)} /
                std::complex<double> {1, -tan(Alfa) * tan(Beta)};
+
+    logger.logDebug("Найдено решение");
+    logger.logDebug(QString("Alfa : %1").arg(Alfa, 0, 'g', 3));
+    logger.logDebug(QString("X : %1").arg(x, 0, 'g', 3));
+    logger.logDebug(QString("Beta : %1").arg(Beta, 0, 'g', 3));
+    logger.logDebug(QString("Y : %1").arg(y, 0, 'g', 3));
+    logger.logDebug(QString("Re(Hi) : %1").arg(res.real(), 0, 'g', 3));
+    logger.logDebug(QString("Im(hi) : %1").arg(res.imag(), 0, 'g', 3));
 
     return Reflection {Alfa, x, Beta, y, res.real(), res.imag()};
 }

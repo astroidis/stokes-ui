@@ -22,9 +22,6 @@ private:
     QString defaultTitle;
     QString selectedExperimentUUID;
 
-signals:
-    void logfile(QString filename);
-
 private slots:
     void openConstants();
     void loadPlot();
